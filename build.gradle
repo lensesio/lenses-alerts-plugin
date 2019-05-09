@@ -1,0 +1,112 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0'
+    }
+}
+
+plugins {
+    id 'net.researchgate.release' version '2.7.0'
+}
+
+apply plugin: 'io.codearte.nexus-staging'
+apply plugin: 'net.researchgate.release'
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+allprojects {
+    group = 'io.lenses'
+    description = "Lenses integraton with alerting services. Allows the user to implement a custom plugin sending notifications to external alerting service."
+
+    if (System.getenv("TRAVIS_BUILD_NUMBER") == null) {
+        version = "1.1-SNAPSHOT"
+    } else {
+        version = "1.0." + System.getenv("TRAVIS_BUILD_NUMBER")
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    release {
+        failOnPublishNeeded = false
+        failOnCommitNeeded = false
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task compile(dependsOn: 'compileJava')
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    build {
+        afterReleaseBuild.dependsOn uploadArchives
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+
+    if (project.hasProperty('release')) {
+        uploadArchives {
+            repositories {
+                mavenDeployer {
+                    // POM signature
+                    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+                    // Target repository
+                    repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                        authentication(userName: ossrhUsername, password: ossrhPassword)
+                    }
+                    pom.project {
+                        name 'lenses-alerting'
+                        packaging 'jar'
+                        description 'lenses alerting plugin'
+                        url 'https://github.com/Landoop/lenses-alerts-plugin'
+
+                        scm {
+                            connection 'scm:git:http://github.com/landoop/lenses-alerts-plugin/'
+                            developerConnection 'scm:git:http://landoop.com/landoop'
+                            url 'http://github.com/landoop/lenses-alerts-plugin'
+                        }
+
+                        licenses {
+                            license {
+                                name 'The Apache 2.0 License'
+                                url 'https://opensource.org/licenses/Apache-2.0'
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
