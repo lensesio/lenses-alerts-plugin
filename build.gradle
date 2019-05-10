@@ -1,3 +1,7 @@
+/*
+ * Copyright 2017-2019 Lenses.io Ltd
+ */
+
 buildscript {
     repositories {
         jcenter()
@@ -8,6 +12,7 @@ buildscript {
     }
     dependencies {
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0'
+        classpath 'com.github.maiflai:gradle-scalatest:0.22'
     }
 }
 
@@ -15,31 +20,46 @@ plugins {
     id 'net.researchgate.release' version '2.7.0'
 }
 
-apply plugin: 'io.codearte.nexus-staging'
-apply plugin: 'net.researchgate.release'
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-
 allprojects {
-    group = 'io.lenses'
-    description = "Lenses integraton with alerting services. Allows the user to implement a custom plugin sending notifications to external alerting service."
-
     if (System.getenv("TRAVIS_BUILD_NUMBER") == null) {
         version = "1.1-SNAPSHOT"
     } else {
         version = "1.0." + System.getenv("TRAVIS_BUILD_NUMBER")
     }
 
+    group = 'io.lenses'
+    description = "Lenses integraton with alerting services. Allows the user to implement a custom plugin sending notifications to external alerting service."
+
     apply plugin: 'java'
+    apply plugin: 'scala'
     apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'net.researchgate.release'
+    apply plugin: 'com.github.maiflai.scalatest'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
+    ext {
+        scalaMajorVersion = '2.12'
+        scalaVersion = '2.12.8'
+    }
+
+    dependencies {
+        compile "org.scala-lang:scala-library:$scalaVersion"
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
     }
 
     release {
@@ -52,7 +72,7 @@ allprojects {
         from javadoc
     }
 
-    task compile(dependsOn: 'compileJava')
+    task compile(dependsOn: 'compileScala')
 
     task sourcesJar(type: Jar) {
         classifier = 'sources'
@@ -65,14 +85,6 @@ allprojects {
 
     build {
         afterReleaseBuild.dependsOn uploadArchives
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
     }
 
     if (project.hasProperty('release')) {

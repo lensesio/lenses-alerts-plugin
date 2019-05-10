@@ -1,9 +1,12 @@
-package io.lenses.alerting.plugin;
+/*
+ * Copyright 2017-2019 Lenses.io Ltd
+ */
+package io.lenses.alerting.plugin.javaapi;
 
 import java.util.Map;
 import java.util.Optional;
 
-public class Alert {
+final public class Alert implements io.lenses.alerting.plugin.Alert {
     public final Map<String, String> labels;
     public final Map<String, String> annotations;
     public final String startsAt;
@@ -19,5 +22,35 @@ public class Alert {
         this.endsAt = endsAt;
         this.generatorURL = generatorURL;
         this.alertId = alertId;
+    }
+
+    @Override
+    public Map<String, String> labels() {
+        return labels;
+    }
+
+    @Override
+    public Map<String, String> annotations() {
+        return annotations;
+    }
+
+    @Override
+    public String startsAt() {
+        return startsAt;
+    }
+
+    @Override
+    public Optional<String> endsAt() {
+        return endsAt.empty();
+    }
+
+    @Override
+    public String generatorURL() {
+        return generatorURL;
+    }
+
+    @Override
+    public int alertId() {
+        return alertId;
     }
 }
