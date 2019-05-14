@@ -1,0 +1,10 @@
+/*
+ * Copyright 2017-2019 Lenses.io Ltd
+ */
+
+dependencies {
+    compile project(':lenses-alerts-java')
+
+    testCompile "org.scalatest:scalatest_$scalaMajorVersion:3.0.5"
+    testCompile 'org.pegdown:pegdown:1.4.2'
+}

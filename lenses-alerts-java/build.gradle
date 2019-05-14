@@ -1,0 +1,7 @@
+/*
+ * Copyright 2017-2019 Lenses.io Ltd
+ */
+
+plugins {
+    id 'java'
+}
