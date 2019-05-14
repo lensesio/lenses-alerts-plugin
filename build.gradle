@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0'
+        classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.20.0'
         classpath 'com.github.maiflai:gradle-scalatest:0.22'
     }
 }
@@ -20,9 +20,11 @@ plugins {
     id 'net.researchgate.release' version '2.7.0'
 }
 
+apply plugin: 'io.codearte.nexus-staging'
+
 allprojects {
     if (System.getenv("TRAVIS_BUILD_NUMBER") == null) {
-        version = "1.1-SNAPSHOT"
+        version = "1.0.0"
     } else {
         version = "1.0." + System.getenv("TRAVIS_BUILD_NUMBER")
     }
@@ -34,8 +36,10 @@ allprojects {
     apply plugin: 'scala'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
+
     apply plugin: 'net.researchgate.release'
     apply plugin: 'com.github.maiflai.scalatest'
+    apply plugin: 'signing'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -87,6 +91,11 @@ allprojects {
         afterReleaseBuild.dependsOn uploadArchives
     }
 
+    signing {
+        required { gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+
     if (project.hasProperty('release')) {
         uploadArchives {
             repositories {
@@ -116,6 +125,18 @@ allprojects {
                             }
                         }
 
+                        developers {
+                            developer {
+                                id = 'michalludwinowicz'
+                                name = 'Michal Ludwinowicz'
+                                email = 'michal.ludwinowicz@lenses.io'
+                            }
+                            developer {
+                                id = 'stheppi'
+                                name = 'Stefan Bocutiu'
+                                email = 'stefan@lenses.io'
+                            }
+                        }
                     }
                 }
             }
