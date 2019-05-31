@@ -5,10 +5,13 @@ package io.lenses.alerting.plugin.scalaapi
 
 import java.util.UUID
 
-import io.lenses.alerting.plugin.javaapi.util.{Try, Success => JSuccess}
 import io.lenses.alerting.plugin.{Alert => IAlert}
 import io.lenses.alerting.plugin.javaapi.{AlertingService => JAlertingService}
-import org.scalatest.{Matchers, WordSpec}
+import io.lenses.alerting.plugin.javaapi.util.Try
+import io.lenses.alerting.plugin.javaapi.util.{Success => JSuccess}
+import io.lenses.alerting.plugin.AlertLevel
+import org.scalatest.Matchers
+import org.scalatest.WordSpec
 
 trait AlertingSpecBase extends WordSpec with Matchers {
 
@@ -17,10 +20,11 @@ trait AlertingSpecBase extends WordSpec with Matchers {
 
     val anException = new Exception(randomStr)
 
-    val dummyAlert = Alert(Map.empty[String, String], Map.empty[String, String], randomStr, None, randomStr, 0)
+    val dummyAlert = Alert(AlertLevel.INFO, "", Nil, "", "", None, 0)
 
     val forwardingService = new JAlertingService {
       override def publish[T <: IAlert](alert: T): Try[T] = new JSuccess(alert)
     }
   }
+
 }
