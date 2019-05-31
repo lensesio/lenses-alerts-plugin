@@ -3,6 +3,7 @@
  */
 package io.lenses.alerting.plugin.scalaapi
 
+import io.lenses.alerting.plugin.{Alert => JAlert}
 import io.lenses.alerting.plugin.javaapi.{AlertingService => JAlertingService}
 import io.lenses.alerting.plugin.scalaapi.util.TryUtils._
 
@@ -13,7 +14,9 @@ import scala.util.Try
   */
 class AlertingService(underlying: JAlertingService) {
 
-  def publish(alert: Alert): Try[Alert] = Try { underlying.publish(alert).asScala }.flatten
+  def publish(alert: JAlert): Try[JAlert] = Try {
+    underlying.publish(alert).asScala
+  }.flatten
 }
 
 object AlertingService {
