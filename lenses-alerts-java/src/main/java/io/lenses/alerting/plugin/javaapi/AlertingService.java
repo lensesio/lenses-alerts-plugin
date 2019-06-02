@@ -12,5 +12,5 @@ public interface AlertingService {
      * @param alert alert to be published
      * @return published alert if successful, failure if not
      */
-    <T extends Alert> Try<T> publish(T alert);
+    Try<Alert> publish(Alert alert);
 }

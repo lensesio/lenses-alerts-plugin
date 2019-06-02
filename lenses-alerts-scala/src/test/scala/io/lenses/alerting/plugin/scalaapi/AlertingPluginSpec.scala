@@ -3,8 +3,15 @@
  */
 package io.lenses.alerting.plugin.scalaapi
 
-import io.lenses.alerting.plugin.javaapi.util.{Failure => JFailure, Success => JSuccess}
-import scala.util.{Failure, Success}
+import io.lenses.alerting.plugin
+import io.lenses.alerting.plugin.javaapi.util.{Failure => JFailure}
+import io.lenses.alerting.plugin.javaapi.util.{Success => JSuccess}
+
+import scala.collection.JavaConverters._
+import scala.util.Failure
+import scala.util.Success
+import scala.util.Try
+import AlertConversion._
 
 class AlertingPluginSpec extends AlertingSpecBase {
 
@@ -14,7 +21,10 @@ class AlertingPluginSpec extends AlertingSpecBase {
       val service = AlertingPlugin(_ => new JSuccess(forwardingService)).init(Map.empty)
 
       service shouldBe 'success
-      service.flatMap(_.publish(dummyAlert)) shouldBe Success(dummyAlert)
+      val result: Try[plugin.Alert] = service.flatMap(_.publish(dummyAlert.asJava))
+      result.isSuccess shouldBe true
+      val alert: plugin.Alert = result.get
+      alert.asScala shouldBe dummyAlert
     }
 
     "fail on underlying plugin init failure" in new TestContext {

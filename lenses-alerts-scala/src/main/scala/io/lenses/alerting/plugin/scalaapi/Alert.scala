@@ -12,31 +12,20 @@ import scala.collection.JavaConverters._
 
 case class Alert(level: AlertLevel,
                  category: String,
-                 tags: Seq[String],
+                 tags: List[String],
                  instance: String,
                  summary: String,
                  docs: Option[String],
-                 alertId: Int) {
+                 alertId: Int,
+                 map: Map[String, String]) {
   def asJava: JAlert = {
-    new JAlert(level, category, tags.asJava, instance, summary, docs.map(d => Optional.of(d)).getOrElse(Optional.empty[String]()), alertId)
-  }
-}
-
-object Alert {
-  def apply(level: AlertLevel,
-            category: String,
-            tags: Seq[String],
-            instance: String,
-            summary: String,
-            docs: Option[String],
-            alertId: Int): JAlert = {
     new JAlert(level,
       category,
       tags.asJava,
       instance,
       summary,
-      docs.map(Optional.of[String]).getOrElse(Optional.empty[String]()),
-      alertId
-    )
+      docs.map(d => Optional.of(d)).getOrElse(Optional.empty[String]()),
+      alertId,
+      map.asJava)
   }
 }

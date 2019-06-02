@@ -3,11 +3,14 @@
  */
 package io.lenses.alerting.plugin.scalaapi
 
-import io.lenses.alerting.plugin
+import io.lenses.alerting.plugin.{Alert => JAlert}
 import io.lenses.alerting.plugin.javaapi.{AlertingService => JAlertingService}
-import io.lenses.alerting.plugin.javaapi.util.{Try, Failure => JFailure}
+import io.lenses.alerting.plugin.javaapi.util.{Failure => JFailure}
+import io.lenses.alerting.plugin.javaapi.util.Try
+import io.lenses.alerting.plugin.scalaapi.AlertConversion._
 
-import scala.util.{Failure, Success}
+import scala.util.Failure
+import scala.util.Success
 
 class AlertingServiceSpec extends AlertingSpecBase {
 
@@ -15,23 +18,23 @@ class AlertingServiceSpec extends AlertingSpecBase {
     "succeed on underlying service publish success" in new TestContext {
       val service = AlertingService(forwardingService)
 
-      service.publish(dummyAlert) shouldBe Success(dummyAlert)
+      service.publish(dummyAlert.asJava).map(_.asScala) shouldBe Success(dummyAlert)
     }
 
     "fail on underlying service publish failure" in new TestContext {
       val service = new AlertingService(new JAlertingService {
-        override def publish[T <: plugin.Alert](alert: T): Try[T] = new JFailure(anException)
+        override def publish(alert: JAlert): Try[JAlert] = new JFailure(anException)
       })
 
-      service.publish(dummyAlert) shouldBe Failure(anException)
+      service.publish(dummyAlert.asJava) shouldBe Failure(anException)
     }
 
     "fail on underlying service publish raises exception" in new TestContext {
       val service = new AlertingService(new JAlertingService {
-        override def publish[T <: plugin.Alert](alert: T): Try[T] = throw anException
+        override def publish(alert: JAlert): Try[JAlert] = throw anException
       })
 
-      service.publish(dummyAlert) shouldBe Failure(anException)
+      service.publish(dummyAlert.asJava) shouldBe Failure(anException)
     }
   }
 }

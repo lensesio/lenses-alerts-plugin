@@ -3,17 +3,20 @@
  */
 package io.lenses.alerting.plugin;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class Alert {
 
     public Alert(AlertLevel level,
                  String category,
-                 Iterable<String> tags,
+                 List<String> tags,
                  String instance,
                  String summary,
                  Optional<String> docs,
-                 int alertId) {
+                 int alertId,
+                 Map<String, String> labels) {
         this.level = level;
         this.category = category;
         this.tags = tags;
@@ -22,6 +25,7 @@ public class Alert {
         this.timestamp = System.currentTimeMillis();
         this.docs = docs;
         this.alertId = alertId;
+        this.labels = labels;
     }
 
     /**
@@ -37,7 +41,7 @@ public class Alert {
     /**
      * Allows the user to configure some routing information
      */
-    public final Iterable<String> tags;
+    public final List<String> tags;
 
     /**
      * Contains the lenses instance raising the alert
@@ -63,4 +67,9 @@ public class Alert {
      * Returns a unique identifier for the alert type
      */
     public final int alertId;
+
+    /**
+     * Keeps a list of key-value
+     */
+    public final Map<String, String> labels;
 }
