@@ -10,6 +10,18 @@ import io.lenses.alerting.plugin.AlertLevel
 
 import scala.collection.JavaConverters._
 
+case class Alert(level: AlertLevel,
+                 category: String,
+                 tags: Seq[String],
+                 instance: String,
+                 summary: String,
+                 docs: Option[String],
+                 alertId: Int) {
+  def asJava: JAlert = {
+    new JAlert(level, category, tags.asJava, instance, summary, docs.map(d => Optional.of(d)).getOrElse(Optional.empty[String]()), alertId)
+  }
+}
+
 object Alert {
   def apply(level: AlertLevel,
             category: String,

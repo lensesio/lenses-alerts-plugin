@@ -23,12 +23,8 @@ plugins {
 apply plugin: 'io.codearte.nexus-staging'
 
 allprojects {
-    if (System.getenv("TRAVIS_BUILD_NUMBER") == null) {
-        version = "1.0.0"
-    } else {
-        version = "1.0." + System.getenv("TRAVIS_BUILD_NUMBER")
-    }
-
+    version = "2.0.1"
+    
     group = 'io.lenses'
     description = "Lenses integraton with alerting services. Allows the user to implement a custom plugin sending notifications to external alerting service."
 
