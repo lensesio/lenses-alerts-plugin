@@ -1,0 +1,101 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'com.github.maiflai:gradle-scalatest:0.22'
+    }
+}
+
+plugins {
+    id 'net.researchgate.release' version '2.7.0'
+    id 'distribution'
+}
+
+
+allprojects {
+
+    apply plugin: 'scala'
+    apply plugin: 'java'
+    apply plugin: 'com.github.maiflai.scalatest'
+    apply plugin: 'net.researchgate.release'
+
+    group = 'io.lenses'
+    description = "The Slack integration for Lenses alerts."
+
+    version = "1.0.0"
+    
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    ext {
+        scalaMajorVersion           = '2.12'
+        scala                       = '2.12.7'
+        jslack_version              = '1.0.26'
+        lensesAlertsVersion         = "3.0.0"
+        scalaTest                   = '3.0.5'
+        slf4jVersion                = "1.7.7"
+        
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "http://repo.typesafe.com/typesafe/releases/" }
+    }
+
+
+    dependencies {
+        implementation "org.scala-lang:scala-library:$scala"
+        implementation 'org.slf4j:slf4j-api:1.7.25'
+        compile "com.github.seratch:jslack:$jslack_version"
+        implementation "io.lenses:lenses-alerts-java:$lensesAlertsVersion"
+        implementation "io.lenses:lenses-alerts-scala_$scalaMajorVersion:$lensesAlertsVersion"
+
+                
+        testCompile 'ch.qos.logback:logback-classic:1.2.3'
+        testCompile "org.scalatest:scalatest_$scalaMajorVersion:$scalaTest"
+        testCompile 'org.pegdown:pegdown:1.1.0'
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task scaladocJar(type: Jar) {
+        classifier = 'scaladoc'
+        from '../LICENSE'
+        from scaladoc
+    }
+
+    tasks.withType(Tar) {
+        compression Compression.GZIP
+        extension = 'tgz'
+    }
+    
+
+    task collectJars(type: Copy) {
+        into "${buildDir}/libs"
+        from {
+            configurations.runtime.filter( { (it.name =~ /jslack.*\.jar/ )})
+        }
+    }
+
+    task compile(dependsOn: 'compileScala')
+
+    artifacts {
+        archives jar
+    }
+
+    javadoc.dependsOn scaladoc
+}
