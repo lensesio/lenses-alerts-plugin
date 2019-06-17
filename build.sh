@@ -1,3 +1,3 @@
-gradle clean build -x test
+gradle clean build
 gradle collectJars
-tar -czvf slack.tar build/libs/*
+tar -czvf alertmanager.tar build/libs/*
