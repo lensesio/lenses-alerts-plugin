@@ -20,7 +20,7 @@ trait AlertingSpecBase extends WordSpec with Matchers {
 
     val anException = new Exception(randomStr)
 
-    val dummyAlert = Alert(AlertLevel.INFO, "", Nil, "", "", None, 0, Map.empty)
+    val dummyAlert = Alert(AlertLevel.INFO, "", Nil, "", "", None, 0, 0, Map.empty)
 
     val forwardingService = new JAlertingService {
       override def publish(alert: JAlert): Try[JAlert] = new JSuccess(alert)

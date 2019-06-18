@@ -16,6 +16,7 @@ object AlertConversion {
         alert.instance,
         alert.summary,
         docs,
+        alert.timestamp,
         alert.alertId,
         alert.labels.asScala.toMap)
     }
