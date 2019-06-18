@@ -16,6 +16,7 @@ case class Alert(level: AlertLevel,
                  instance: String,
                  summary: String,
                  docs: Option[String],
+                 timestamp: Long,
                  alertId: Int,
                  map: Map[String, String]) {
   def asJava: JAlert = {
@@ -25,6 +26,7 @@ case class Alert(level: AlertLevel,
       instance,
       summary,
       docs.map(d => Optional.of(d)).getOrElse(Optional.empty[String]()),
+      timestamp,
       alertId,
       map.asJava)
   }

@@ -17,16 +17,29 @@ public class Alert {
                  Optional<String> docs,
                  int alertId,
                  Map<String, String> labels) {
+        this(level, category, tags, instance, summary, docs, System.currentTimeMillis(), alertId, labels);
+    }
+
+    public Alert(AlertLevel level,
+                 String category,
+                 List<String> tags,
+                 String instance,
+                 String summary,
+                 Optional<String> docs,
+                 Long timestamp,
+                 int alertId,
+                 Map<String, String> labels) {
         this.level = level;
         this.category = category;
         this.tags = tags;
         this.instance = instance;
         this.summary = summary;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = timestamp;
         this.docs = docs;
         this.alertId = alertId;
         this.labels = labels;
     }
+
 
     /**
      * The importance of the alert
