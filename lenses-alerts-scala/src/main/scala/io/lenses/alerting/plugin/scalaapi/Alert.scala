@@ -31,3 +31,15 @@ case class Alert(level: AlertLevel,
       map.asJava)
   }
 }
+
+object Alert {
+  def apply(level: AlertLevel,
+            category: String,
+            tags: List[String],
+            instance: String,
+            summary: String,
+            docs: Option[String],
+            alertId: Int,
+            map: Map[String, String]): Alert =
+    apply(level, category, tags, instance, summary, docs, System.currentTimeMillis(), alertId, map)
+}
