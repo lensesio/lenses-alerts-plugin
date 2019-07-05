@@ -3,6 +3,7 @@
  */
 package io.lenses.alerting.plugin.scalaapi
 
+import java.util.Collections
 import java.util.UUID
 
 import io.lenses.alerting.plugin.{Alert => JAlert}
@@ -24,6 +25,9 @@ trait AlertingSpecBase extends WordSpec with Matchers {
 
     val forwardingService = new JAlertingService {
       override def publish(alert: JAlert): Try[JAlert] = new JSuccess(alert)
+      override def name(): String = ""
+      override def description(): String = ""
+      override def displayedInformation(): java.util.Map[String, String] = Collections.emptyMap()
     }
   }
 
