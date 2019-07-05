@@ -24,25 +24,23 @@ class AlertingServiceSpec extends AlertingSpecBase {
     }
 
     "fail on underlying service publish failure" in new TestContext {
-      val service = new AlertingService(new JAlertingService {
-        override def publish(alert: JAlert): Try[JAlert] = new JFailure(anException)
-        override def name(): String = ""
-        override def description(): String = ""
-        override def displayedInformation(): java.util.Map[String, String] = Collections.emptyMap()
-      })
+      val service = new AlertingService(new TestAlertingServiceCallback(new JFailure(anException)))
 
       service.publish(dummyAlert.asJava) shouldBe Failure(anException)
     }
 
     "fail on underlying service publish raises exception" in new TestContext {
-      val service = new AlertingService(new JAlertingService {
-        override def publish(alert: JAlert): Try[JAlert] = throw anException
-        override def name(): String = ""
-        override def description(): String = ""
-        override def displayedInformation(): java.util.Map[String, String] = Collections.emptyMap()
-      })
+      val service = new AlertingService(new TestAlertingServiceCallback(throw anException))
 
       service.publish(dummyAlert.asJava) shouldBe Failure(anException)
     }
   }
+
+  class TestAlertingServiceCallback(thunk: => Try[JAlert]) extends JAlertingService {
+    override def name(): String = ""
+    override def description(): String = ""
+    override def displayedInformation(): java.util.Map[String, String] = Collections.emptyMap()
+    override def publish(alert: JAlert): Try[JAlert] = thunk
+  }
+
 }
