@@ -18,7 +18,7 @@ class AlertingPluginSpec extends AlertingSpecBase {
   "init" should {
     "succeed on underlying plugin init success" in new TestContext {
 
-      val service = AlertingPlugin(_ => new JSuccess(forwardingService)).init(Map.empty)
+      val service = AlertingPlugin(new TestBasePlugin(new JSuccess(forwardingService))).init(Map.empty)
 
       service shouldBe 'success
       val result: Try[plugin.Alert] = service.flatMap(_.publish(dummyAlert.asJava))
@@ -28,13 +28,13 @@ class AlertingPluginSpec extends AlertingSpecBase {
     }
 
     "fail on underlying plugin init failure" in new TestContext {
-      val plugin = AlertingPlugin(_ => new JFailure(anException))
+      val plugin = AlertingPlugin(new TestBasePlugin(new JFailure(anException)))
 
       plugin.init(Map.empty) shouldBe Failure(anException)
     }
 
     "fail on underlying plugin init raises exception" in new TestContext {
-      val plugin = AlertingPlugin(_ => throw anException)
+      val plugin = AlertingPlugin(new TestBasePlugin(throw anException))
 
       plugin.init(Map.empty) shouldBe Failure(anException)
     }
