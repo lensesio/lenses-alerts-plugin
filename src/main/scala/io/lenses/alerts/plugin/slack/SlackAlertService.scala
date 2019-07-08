@@ -1,5 +1,7 @@
 package io.lenses.alerts.plugin.slack
 
+import java.util
+
 import com.github.seratch.jslack.Slack
 import com.github.seratch.jslack.api.model.Attachment
 import com.github.seratch.jslack.api.model.Field
@@ -13,7 +15,7 @@ import io.lenses.alerts.plugin.slack.TryUtils._
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-class SlackAlertService(config: SlackConfig) extends AlertingService {
+class SlackAlertService(config: SlackConfig) extends AlertingService with Metadata {
   private val CriticalColor = "#BF350C"
   private val HighColor = "#F35A00"
   private val MediumColor = "#FF8043"
@@ -51,5 +53,12 @@ class SlackAlertService(config: SlackConfig) extends AlertingService {
       slack.send(config.webhookUrl, payload)
       alert
     }.asJava
+  }
+  override def displayedInformation(): util.Map[String, String] = {
+    import scala.collection.JavaConverters._
+    Map(
+      "User Name" -> config.userName,
+      "Channel" -> config.channel
+    ).asJava
   }
 }

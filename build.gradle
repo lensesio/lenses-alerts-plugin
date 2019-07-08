@@ -36,7 +36,7 @@ allprojects {
         scalaMajorVersion           = '2.12'
         scala                       = '2.12.7'
         jslack_version              = '1.0.26'
-        lensesAlertsVersion         = "3.0.0"
+        lensesAlertsVersion         = "5.0.0"
         scalaTest                   = '3.0.5'
         slf4jVersion                = "1.7.7"
         
