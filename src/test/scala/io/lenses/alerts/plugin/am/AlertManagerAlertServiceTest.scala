@@ -39,6 +39,7 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       "prod1",
       "This is important",
       None,
+      System.currentTimeMillis(),
       1,
       Map.empty).asJava
 
@@ -73,6 +74,7 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       "prod1",
       "This is important",
       None,
+      System.currentTimeMillis(),
       1,
       Map.empty).asJava
 
@@ -85,6 +87,7 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       "prod1",
       "This is important",
       None,
+      System.currentTimeMillis(),
       2,
       Map.empty).asJava
 
@@ -103,6 +106,7 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       "prod1",
       "This is important",
       None,
+      System.currentTimeMillis(),
       2,
       Map.empty)
 

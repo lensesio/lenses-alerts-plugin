@@ -39,6 +39,7 @@ class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
         "prod1",
         "This is important",
         None,
+        System.currentTimeMillis(),
         1,
         Map.empty).toAMAlert
 
@@ -79,6 +80,7 @@ class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
         "prod1",
         "This is important",
         None,
+        System.currentTimeMillis(),
         1,
         Map.empty).toAMAlert
 
@@ -98,19 +100,20 @@ class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
 
   test("if the endpoint fails it returns a Failure") {
 
-      val alert = Alert(
-        AlertLevel.CRITICAL,
-        "infrastructure",
-        List("tag1"),
-        "prod1",
-        "This is important",
-        None,
-        1,
-        Map.empty).toAMAlert
+    val alert = Alert(
+      AlertLevel.CRITICAL,
+      "infrastructure",
+      List("tag1"),
+      "prod1",
+      "This is important",
+      None,
+      System.currentTimeMillis(),
+      1,
+      Map.empty).toAMAlert
 
-      val json = List(alert).asJson.noSpaces
+    val json = List(alert).asJson.noSpaces
 
-      val publisher = new HttpPublisher(Config(List(s"http://localhost:11111"), "dev", "http://lenses.io", 10000, HttpConfig()))
-      publisher.publish(alert).isFailure shouldBe true
+    val publisher = new HttpPublisher(Config(List(s"http://localhost:11111"), "dev", "http://lenses.io", 10000, HttpConfig()))
+    publisher.publish(alert).isFailure shouldBe true
   }
 }

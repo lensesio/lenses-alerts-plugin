@@ -60,7 +60,7 @@ object Config {
   val HttpConnectTimeoutDefault = 5000
 
   val HttpRequestTimeout = "http.timeout.request"
-  val HttpRequestTimeoutDefault = 5000
+  val HttpRequestTimeoutDefault = 15000
 
   val HttpSocketTimeout = "http.timeout.socket"
   val HttpSocketTimeoutDefault = 5000

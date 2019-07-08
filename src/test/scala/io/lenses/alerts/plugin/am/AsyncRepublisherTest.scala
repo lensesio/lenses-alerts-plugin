@@ -23,6 +23,7 @@ class AsyncRepublisherTest extends FunSuite with Matchers {
       "prod1",
       "This is important",
       None,
+      System.currentTimeMillis(),
       1,
       Map.empty).toAMAlert
 
@@ -33,6 +34,7 @@ class AsyncRepublisherTest extends FunSuite with Matchers {
       "prod1",
       "This is important",
       None,
+      System.currentTimeMillis(),
       2,
       Map.empty).toAMAlert
 

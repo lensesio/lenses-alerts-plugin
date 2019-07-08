@@ -2,6 +2,7 @@ package io.lenses.alerts.plugin.am
 
 import java.time.format.DateTimeFormatter
 import java.time.ZonedDateTime
+import java.util
 
 import io.lenses.alerting.plugin.javaapi.AlertingService
 import io.lenses.alerting.plugin.Alert
@@ -14,7 +15,7 @@ import scala.util.Try
 class AlertManagerService(config: Config,
                           amPublisher: Publisher,
                           republisherFn: (Publisher, Long, AlertsRaised) => Republisher = Republisher.async)
-  extends AlertingService with AutoCloseable with AlertsRaised {
+  extends AlertingService with AutoCloseable with AlertsRaised with Metadata {
 
   private val raisedAlertsBuffer = scala.collection.concurrent.TrieMap.empty[Int, AlertManagerAlert]
   private val republisher = republisherFn(amPublisher, config.publishInterval, this)
@@ -46,4 +47,16 @@ class AlertManagerService(config: Config,
   }
 
   override def getAlerts: Iterable[AlertManagerAlert] = raisedAlertsBuffer.values
+  override def displayedInformation(): util.Map[String, String] = {
+    import scala.collection.JavaConverters._
+    Map(
+      Config.Endpoints -> config.endpoints.mkString(","),
+      "Lenses URL" -> config.generatorUrl,
+      "Publish Interval" -> (config.publishInterval + " ms"),
+      Config.SSL -> config.httpConfig.ssl.toString,
+      "HTTP connection timeout" -> (config.httpConfig.connectTimeout + " ms"),
+      "HTTP request timeout" -> (config.httpConfig.requestTimeout + " ms"),
+      "HTTP socket timeout" -> (config.httpConfig.socketTimeout + " ms")
+    ).asJava
+  }
 }
