@@ -13,7 +13,7 @@ import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.slack.TryUtils._
 
 import scala.collection.JavaConverters._
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 class SlackAlertService(config: SlackConfig) extends AlertingService with Metadata {
   private val CriticalColor = "#BF350C"
@@ -51,7 +51,12 @@ class SlackAlertService(config: SlackConfig) extends AlertingService with Metada
       }
 
       slack.send(config.webhookUrl, payload)
-      alert
+    }.flatMap { resp =>
+      if (resp.getCode == 200) {
+        Success(alert)
+      } else {
+        Failure(new Exception(s"Slack web-hook failed with status code ${resp.getCode} and body ${resp.getBody}"))
+      }
     }.asJava
   }
   override def displayedInformation(): util.Map[String, String] = {
