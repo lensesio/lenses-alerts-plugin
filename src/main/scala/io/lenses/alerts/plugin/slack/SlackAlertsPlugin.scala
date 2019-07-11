@@ -39,8 +39,8 @@ class SlackAlertsPlugin extends AlertingPlugin with Metadata {
 }
 
 object SlackAlertsPlugin {
-  val WEBHOOK = "webhook.url"
+  val WEBHOOK = "webhook-url"
   val USER = "username"
   val CHANNEL = "channel"
-  val ICON = "icon.url"
+  val ICON = "icon-url"
 }
