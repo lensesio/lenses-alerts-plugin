@@ -32,11 +32,10 @@ Apart from the above the plugin requires a few extra configurations as seen in t
 
 ## Build
 
-In order to compile the code, you have to run the following command (Gradle needs to be installed and available
-on your command prompt)
+In order to compile the code, you have to run the following command:
 
 ```
-sbt assembly
+sbt test assembly
 ```
 
 To publish a release to github:
