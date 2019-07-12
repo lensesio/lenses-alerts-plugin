@@ -21,14 +21,14 @@ class AlertManagerPlugin extends AlertingPlugin with Metadata {
 
   override def configKeys(): util.List[ConfigEntry] = {
     List(
-      new ConfigEntry("endpoints", "Comma separated Alert Manager endpoints"),
-      new ConfigEntry("source", "The Lenses instance raising the alert"),
-      new ConfigEntry("generator.url", "A URL to identify Lenses; it can be left to empty"),
-      new ConfigEntry("ssl", "If SSL connection is required set the value to true."),
-      new ConfigEntry("publish.interval", "The time window in milliseconds to republish raised alerts. Alert Manager requires opened alerts to be sent over and over. Default value is 300000 - which is 5 minutes"),
-      new ConfigEntry("http.timeout.connect", "The amount of time in milliseconds to open the HTTP connection to the Alert Manager endpoints. Default value is 5000 - which is 5 seconds"),
-      new ConfigEntry("http.timeout.request", "The amount of time in milliseconds to wait for a response from Alert Manager. Default value is 15000 - which is 15 seconds"),
-      new ConfigEntry("http.timeout.socket", "The amount of time in milliseconds to wait in order to open the underlying HTTP connection socket. Default value is 5000 - which is 5 seconds")
+      new ConfigEntry(Config.Endpoints, "Comma separated Alert Manager endpoints"),
+      new ConfigEntry(Config.Source, "The Lenses instance raising the alert"),
+      new ConfigEntry(Config.GeneratorUrl, "A URL to identify Lenses; it can be left to empty"),
+      new ConfigEntry(Config.SSL, "If SSL connection is required set the value to true."),
+      new ConfigEntry(Config.PublishInterval, "The time window in milliseconds to republish raised alerts. Alert Manager requires opened alerts to be sent over and over. Default value is 300000 - which is 5 minutes"),
+      new ConfigEntry(Config.HttpConnectTimeout, "The amount of time in milliseconds to open the HTTP connection to the Alert Manager endpoints. Default value is 5000 - which is 5 seconds"),
+      new ConfigEntry(Config.HttpRequestTimeout, "The amount of time in milliseconds to wait for a response from Alert Manager. Default value is 15000 - which is 15 seconds"),
+      new ConfigEntry(Config.HttpSocketTimeout, "The amount of time in milliseconds to wait in order to open the underlying HTTP connection socket. Default value is 5000 - which is 5 seconds")
     ).asJava
   }
 }

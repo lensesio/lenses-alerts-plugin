@@ -48,21 +48,21 @@ case class HttpConfig(connectTimeout: Int = 2000,
 object Config {
   val Endpoints = "endpoints"
   val Source = "source"
-  val GeneratorUrl = "generator.url"
+  val GeneratorUrl = "generator-url"
 
   val SSL = "ssl"
   val SSLDefault = false
 
-  val PublishInterval = "publish.interval"
+  val PublishInterval = "publish-interval"
   val PublishIntervalDefault: Long = 5 * 60 * 1000 //5 minutes
 
-  val HttpConnectTimeout = "http.timeout.connect"
+  val HttpConnectTimeout = "http-connect-timeout"
   val HttpConnectTimeoutDefault = 5000
 
-  val HttpRequestTimeout = "http.timeout.request"
+  val HttpRequestTimeout = "http-request-timeout"
   val HttpRequestTimeoutDefault = 15000
 
-  val HttpSocketTimeout = "http.timeout.socket"
+  val HttpSocketTimeout = "http-socket-timeout"
   val HttpSocketTimeoutDefault = 5000
 
   private def getOrError(key: String, map: Map[String, String]): String = {
