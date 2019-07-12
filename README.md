@@ -36,19 +36,18 @@ with the end timestamp stamp and from that point onwards the alert is not pushed
 
 ## Build
 
-In order to compile the code, you have to run the following command (Gradle needs to be installed and available
-on your command prompt)
+In order to compile the code, you have to run the following command:
 
 ```
-    gradle clean build
+sbt assembly
 ```
 
-To build for release:
-
+To publish a release to github:
 ```
-    ./build.sh
+git tag vX.Y.Z
+git push origin vX.Y.Z
+export GITHUB_TOKEN=XXXXXX
+sbt assembly githubRelease
 ```
 
-Then zip the files from build/libs and add it to Github.
-Only the two jars are required in the release,
-since Lenses already brings in gson, okhttp, okio, sl4j.
+The token should be created as per the [instructions](https://github.com/ohnosequences/sbt-github-release/tree/master#credentials) of the sbt-github-release plugin.
