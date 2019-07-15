@@ -3,6 +3,8 @@
  */
 package io.lenses.alerting.plugin.scalaapi
 
+import java.util.Optional
+
 import io.lenses.alerting.plugin.javaapi.{AlertingPlugin => JAlertingPlugin}
 import io.lenses.alerting.plugin.scalaapi.util.TryUtils._
 
@@ -14,9 +16,9 @@ import scala.util.Try
   */
 class AlertingPlugin(underlying: JAlertingPlugin) {
 
-  def init(config: Map[String, String]): Try[AlertingService] = for {
+  def init(config: Map[String, String], nameOverride: Option[String], descriptionOverride: Option[String]): Try[AlertingService] = for {
     init <- Try {
-      underlying.init(config.asJava)
+      underlying.init(config.asJava, Optional.ofNullable(nameOverride.orNull), Optional.ofNullable(descriptionOverride.orNull))
     }
     service <- init.asScala
   } yield new AlertingService(service)

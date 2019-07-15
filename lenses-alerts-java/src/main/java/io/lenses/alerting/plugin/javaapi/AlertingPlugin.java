@@ -7,6 +7,7 @@ import io.lenses.alerting.plugin.javaapi.util.Try;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface AlertingPlugin {
 
@@ -34,4 +35,14 @@ public interface AlertingPlugin {
      * @return alerting service or failure
      */
     Try<AlertingService> init(Map<String, String> config);
+
+    /**
+     * Returns AlertingService for valid configuration (depends on the alerting service class).
+     * @param config service configuration
+     * @param nameOverride override for the name of the service
+     * @param descriptionOverride override for the description of the service
+     *
+     * @return alerting service or failure
+     */
+    Try<AlertingService> init(Map<String, String> config, Optional<String> nameOverride, Optional<String> descriptionOverride);
 }

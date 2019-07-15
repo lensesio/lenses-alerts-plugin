@@ -23,7 +23,7 @@ plugins {
 apply plugin: 'io.codearte.nexus-staging'
 
 allprojects {
-    version = "5.0.0"
+    version = "5.1-SNAPSHOT"
     
     group = 'io.lenses'
     description = "Lenses integration with alerting services. Allows the user to implement a custom plugin sending notifications to external alerting service."

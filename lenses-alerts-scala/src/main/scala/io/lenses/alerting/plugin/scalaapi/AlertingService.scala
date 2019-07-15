@@ -25,7 +25,7 @@ class AlertingService(underlying: JAlertingService) {
   def description: String = underlying.description()
 
   def displayedInformation: mutable.Map[String, String] = underlying.displayedInformation().asScala
-  }
+}
 
 object AlertingService {
   def apply(underlying: JAlertingService): AlertingService = new AlertingService(underlying)
