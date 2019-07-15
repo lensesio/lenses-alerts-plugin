@@ -24,7 +24,6 @@ ThisBuild / scalacOptions ++= Seq(
 ghreleaseNotes := identity
 
 val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.25"
-val exts = "com.sksamuel.exts" %% "exts" % "1.60.0"
 val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.5.6"
 val lensesAlerts = "io.lenses" %% "lenses-alerts-scala" % "5.0.0"
 val circeParser = "io.circe" %% "circe-parser" % "0.11.1"
@@ -38,13 +37,12 @@ val wiremock = "com.github.tomakehurst" % "wiremock" % "2.23.2"
 lazy val root = (project in file("."))
   .settings(
     name := "lenses-alertmanager-plugin",
-    libraryDependencies += sl4fj,
-    libraryDependencies += exts,
-    libraryDependencies += httpclient,
-    libraryDependencies += lensesAlerts,
-    libraryDependencies += circeParser,
-    libraryDependencies += circeGeneric,
-    libraryDependencies += circeGenericExtras,
+    libraryDependencies += sl4fj % Provided,
+    libraryDependencies += httpclient % Provided,
+    libraryDependencies += lensesAlerts % Provided,
+    libraryDependencies += circeParser % Provided,
+    libraryDependencies += circeGeneric % Provided,
+    libraryDependencies += circeGenericExtras % Provided,
     libraryDependencies += logbackClassic % Test,
     libraryDependencies += scalaTest % Test,
     libraryDependencies += pegdown % Test,
