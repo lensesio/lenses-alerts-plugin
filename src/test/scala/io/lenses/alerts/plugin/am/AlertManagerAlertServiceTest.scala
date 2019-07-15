@@ -30,7 +30,7 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       override def close(): Unit = {}
     }
 
-    val service = new AlertManagerService(config, publisher, (_, _, _) => NoOpRepublisher)
+    val service = new AlertManagerService("", "", config, publisher, (_, _, _) => NoOpRepublisher)
 
     val alert = Alert(
       AlertLevel.CRITICAL,
@@ -65,7 +65,7 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       override def close(): Unit = {}
     }
 
-    val service = new AlertManagerService(config, publisher, (_, _, _) => NoOpRepublisher)
+    val service = new AlertManagerService("", "", config, publisher, (_, _, _) => NoOpRepublisher)
 
     val alert1 = Alert(
       AlertLevel.CRITICAL,
