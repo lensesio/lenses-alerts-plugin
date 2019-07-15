@@ -34,9 +34,9 @@ val pegdown = "org.pegdown" % "pegdown" % "1.1.0"
 lazy val root = (project in file("."))
   .settings(
     name := "lenses-slack-alerts-plugin",
-    libraryDependencies += sl4fj,
+    libraryDependencies += sl4fj % Provided,
     libraryDependencies += jslack,
-    libraryDependencies += lensesAlerts,
+    libraryDependencies += lensesAlerts % Provided,
     libraryDependencies += logbackClassic % Test,
     libraryDependencies += scalaTest % Test,
     libraryDependencies += pegdown % Test,
