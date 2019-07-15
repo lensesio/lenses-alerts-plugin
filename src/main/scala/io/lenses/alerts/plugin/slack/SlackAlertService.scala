@@ -15,7 +15,9 @@ import io.lenses.alerts.plugin.slack.TryUtils._
 import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}
 
-class SlackAlertService(config: SlackConfig) extends AlertingService with Metadata {
+class SlackAlertService(override val name: String,
+                        override val description: String,
+                        config: SlackConfig) extends AlertingService with Metadata {
   private val CriticalColor = "#BF350C"
   private val HighColor = "#F35A00"
   private val MediumColor = "#FF8043"

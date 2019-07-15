@@ -2,10 +2,8 @@ package io.lenses.alerts.plugin.slack
 
 import java.util
 
-import io.lenses.alerting.plugin.javaapi.AlertingPlugin
+import io.lenses.alerting.plugin.javaapi.{AlertingPlugin, AlertingService, ConfigEntry}
 import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
-import io.lenses.alerting.plugin.javaapi.AlertingService
-import io.lenses.alerting.plugin.javaapi.ConfigEntry
 import io.lenses.alerts.plugin.slack.SlackAlertsPlugin._
 import io.lenses.alerts.plugin.slack.TryUtils._
 
@@ -13,6 +11,11 @@ import scala.collection.JavaConverters._
 import scala.util.Try
 
 class SlackAlertsPlugin extends AlertingPlugin with Metadata {
+
+  override val name: String = "Slack"
+
+  override val description: String = "Plugin to support pushing Lenses alerts to Slack webhook"
+
   override def init(config: util.Map[String, String]): JTry[AlertingService] = Try {
     val map = config.asScala
     def getOrError(key: String): String = {
@@ -24,7 +27,7 @@ class SlackAlertsPlugin extends AlertingPlugin with Metadata {
     val channel = getOrError(CHANNEL)
     val iconUrl = map.get(ICON)
 
-    val as: AlertingService = new SlackAlertService(SlackConfig(webhookUrl, userName, channel, iconUrl))
+    val as: AlertingService = new SlackAlertService(name, description, SlackConfig(webhookUrl, userName, channel, iconUrl))
     as
   }.asJava
   override def configKeys(): util.List[ConfigEntry] = {
