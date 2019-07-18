@@ -46,6 +46,7 @@ ThisBuild / scalacOptions ++= Seq(
 )
 ThisBuild / ghreleaseNotes := identity
 ThisBuild / pomIncludeRepository := { _ => false }
+ThisBuild / publishTo := sonatypePublishTo.value
 
 // Dependencies
 val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0"
@@ -62,38 +63,45 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5"
 // Root project
 lazy val root = (project in file("."))
   .disablePlugins(AssemblyPlugin)
-  .disablePlugins(SbtGithubReleasePlugin)
   .aggregate(alertsPluginApi, slackAlertsPlugin, alertManagerPlugin)
-
-Compile / packageBin := { file("") }
-Compile / packageSrc := { file("") }
-Compile / packageDoc := { file("") }
+  .settings(
+    name := "lenses-alerts-plugin",
+    ghreleaseNotes := identity,
+    ghreleaseAssets := List(
+      (slackAlertsPlugin / assembly / assemblyOutputPath).value,
+      (alertManagerPlugin / assembly / assemblyOutputPath).value,
+    ),
+    skip in publish := true
+  )
 
 lazy val alertsPluginApi = (project in file("lenses-alerts-plugin-api"))
   .disablePlugins(AssemblyPlugin)
+  .disablePlugins(SbtGithubReleasePlugin)
   .settings(
+    name := "lenses-alerts-plugin-api",
     description := "Lenses.io Alerts Plugin API",
     libraryDependencies += scalaJava8Compat,
     libraryDependencies += scalaTest % Test,
-    ghreleaseNotes := identity
   )
 
 lazy val slackAlertsPlugin = (project in file("lenses-slack-alerts-plugin"))
+  .disablePlugins(SbtGithubReleasePlugin)
   .dependsOn(alertsPluginApi)
   .settings(
+    name := "lenses-slack-alerts-plugin",
     description := "Lenses.io Slack Alerts Plugin",
     libraryDependencies += sl4fj % Provided,
     libraryDependencies += jslack,
     libraryDependencies += logbackClassic % Test,
     libraryDependencies += scalaTest % Test,
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
-    ghreleaseAssets += (assembly / assemblyOutputPath).value,
-    ghreleaseNotes := identity
   )
 
 lazy val alertManagerPlugin = (project in file("lenses-alertmanager-plugin"))
+  .disablePlugins(SbtGithubReleasePlugin)
   .dependsOn(alertsPluginApi)
   .settings(
+    name := "lenses-alertmanager-plugin",
     description := "Lenses.io Prometheus Alert-Manager Plugin",
     libraryDependencies += sl4fj % Provided,
     libraryDependencies += httpclient % Provided,
@@ -104,6 +112,4 @@ lazy val alertManagerPlugin = (project in file("lenses-alertmanager-plugin"))
     libraryDependencies += scalaTest % Test,
     libraryDependencies += wiremock % Test,
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
-    ghreleaseAssets += (assembly / assemblyOutputPath).value,
-    ghreleaseNotes := identity
   )

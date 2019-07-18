@@ -3,22 +3,63 @@
 
 
 # lenses-alerts-plugin
-Defines interface for plugable lenses alert services integration
+
+Defines interface for pluggable lenses alert services integration, along with
+some officially supported implementations.
+
+## Modules
+
+- [`lenses-alerts-plugin-api`](./lenses-alerts-plugin-api)
+  - defines the API for an alerts plugin
+- [`lenses-slack-alerts-plugin`](./lenses-slack-alerts-plugin)
+  - defines an implementation for Slack integration
+- [`lenses-alertmanager-plugin`](./lenses-alertmanager-plugin)
+  - defines an implementation for Prometheus Alertmanager
+  
+All modules are published to Maven central. In addition, standalone JARs of 
+each of plugin integration are available to download from Github releases, ready
+to drop straight into a Lenses installation.
 
 # Build
 
-This project uses Gradle build system. To compile and run the tests execute
+This project uses sbt. To compile and run the tests execute
 
 
 ```bash
-    gradle clean test
+sbt test
 ```
 
-In order to release run once `gradle.properties` has been updated with the ossrh and signing settings
+# Release
 
-```bash
-    gradle clean build signArchives uploadArchives closeRepository releaseRepository
+Initial setup:
+
+- create `$HOME/.sbt/1.0/sonatype.sbt` with Sonatype account information:
 ```
-    
+credentials += Credentials("Sonatype Nexus Repository Manager",
+                           "oss.sonatype.org",
+                           "YOUR_SONATYPE_USERNAME",
+                           "YOUR_SONATYPE_PASSWORD")
+```
 
+- create `$HOME/.github`, with an OAuth token created as per these [instructions](https://github.com/ohnosequences/sbt-github-release/tree/master#credentials):
+```
+oauth = YOUR_OAUTH_TOKEN
+```
 
+Create and publish the release:
+
+- tag the release:
+```
+git tag vX.Y.Z
+git push origin vX.Y.Z
+```
+
+- publish libraries to nexus
+```
+sbt publishSigned sonatypeRelease
+```
+
+- publish standalone jars to github
+```
+sbt assembly githubRelease
+```
