@@ -50,12 +50,16 @@ ThisBuild / pomIncludeRepository := { _ => false }
 val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0"
 val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.25"
 val jslack = "com.github.seratch" % "jslack" % "1.0.26"
-val lensesAlerts = "io.lenses" %% "lenses-alerts-scala" % "5.0.0"
 val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5"
 val pegdown = "org.pegdown" % "pegdown" % "1.1.0"
 
+lazy val apps = (project in file("."))
+  .disablePlugins(AssemblyPlugin)
+  .aggregate(alertsPluginApi, slackAlertsPlugin)
+
 lazy val alertsPluginApi = (project in file("lenses-alerts-plugin-api"))
+  .disablePlugins(AssemblyPlugin)
   .settings(
     name := "lenses-alerts-plugin-api",
     description := "Lenses.io Alerts Plugin API",
@@ -63,3 +67,21 @@ lazy val alertsPluginApi = (project in file("lenses-alerts-plugin-api"))
     libraryDependencies += scalaTest % Test,
   )
 
+lazy val slackAlertsPlugin = (project in file("lenses-slack-alerts-plugin"))
+  .dependsOn(alertsPluginApi)
+  .settings(
+    name := "lenses-slack-alerts-plugin",
+    description := "Lenses.io Slack Alerts Plugin",
+    libraryDependencies += sl4fj % Provided,
+    libraryDependencies += jslack,
+    libraryDependencies += logbackClassic % Test,
+    libraryDependencies += scalaTest % Test,
+    libraryDependencies += pegdown % Test,
+    assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
+    ghreleaseAssets += (assembly / assemblyOutputPath).value
+
+  )
+
+Compile / packageBin := { file("") }
+Compile / packageSrc := { file("") }
+Compile / packageDoc := { file("") }
