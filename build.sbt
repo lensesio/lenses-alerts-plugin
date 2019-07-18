@@ -44,44 +44,66 @@ ThisBuild / scalacOptions ++= Seq(
   "-language:higherKinds",
   "-Ybackend-parallelism", "8"
 )
-ghreleaseNotes := identity
+ThisBuild / ghreleaseNotes := identity
 ThisBuild / pomIncludeRepository := { _ => false }
 
+// Dependencies
 val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0"
 val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.25"
 val jslack = "com.github.seratch" % "jslack" % "1.0.26"
+val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.5.6"
+val circeParser = "io.circe" %% "circe-parser" % "0.11.1"
+val circeGeneric = "io.circe" %% "circe-generic" % "0.11.1"
+val circeGenericExtras = "io.circe" %% "circe-generic-extras" % "0.11.1"
+val wiremock = "com.github.tomakehurst" % "wiremock" % "2.23.2"
 val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5"
-val pegdown = "org.pegdown" % "pegdown" % "1.1.0"
 
-lazy val apps = (project in file("."))
+// Root project
+lazy val root = (project in file("."))
   .disablePlugins(AssemblyPlugin)
-  .aggregate(alertsPluginApi, slackAlertsPlugin)
+  .disablePlugins(SbtGithubReleasePlugin)
+  .aggregate(alertsPluginApi, slackAlertsPlugin, alertManagerPlugin)
+
+Compile / packageBin := { file("") }
+Compile / packageSrc := { file("") }
+Compile / packageDoc := { file("") }
 
 lazy val alertsPluginApi = (project in file("lenses-alerts-plugin-api"))
   .disablePlugins(AssemblyPlugin)
   .settings(
-    name := "lenses-alerts-plugin-api",
     description := "Lenses.io Alerts Plugin API",
     libraryDependencies += scalaJava8Compat,
     libraryDependencies += scalaTest % Test,
+    ghreleaseNotes := identity
   )
 
 lazy val slackAlertsPlugin = (project in file("lenses-slack-alerts-plugin"))
   .dependsOn(alertsPluginApi)
   .settings(
-    name := "lenses-slack-alerts-plugin",
     description := "Lenses.io Slack Alerts Plugin",
     libraryDependencies += sl4fj % Provided,
     libraryDependencies += jslack,
     libraryDependencies += logbackClassic % Test,
     libraryDependencies += scalaTest % Test,
-    libraryDependencies += pegdown % Test,
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
-    ghreleaseAssets += (assembly / assemblyOutputPath).value
-
+    ghreleaseAssets += (assembly / assemblyOutputPath).value,
+    ghreleaseNotes := identity
   )
 
-Compile / packageBin := { file("") }
-Compile / packageSrc := { file("") }
-Compile / packageDoc := { file("") }
+lazy val alertManagerPlugin = (project in file("lenses-alertmanager-plugin"))
+  .dependsOn(alertsPluginApi)
+  .settings(
+    description := "Lenses.io Prometheus Alert-Manager Plugin",
+    libraryDependencies += sl4fj % Provided,
+    libraryDependencies += httpclient % Provided,
+    libraryDependencies += circeParser % Provided,
+    libraryDependencies += circeGeneric % Provided,
+    libraryDependencies += circeGenericExtras % Provided,
+    libraryDependencies += logbackClassic % Test,
+    libraryDependencies += scalaTest % Test,
+    libraryDependencies += wiremock % Test,
+    assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
+    ghreleaseAssets += (assembly / assemblyOutputPath).value,
+    ghreleaseNotes := identity
+  )
