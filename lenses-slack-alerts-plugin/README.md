@@ -29,23 +29,3 @@ Apart from the above the plugin requires a few extra configurations as seen in t
 | channel        | String | The name of the channel to send the alert to.                      |
 | icon-url       | String | (Optional). The full path to an image to set for the slack message.|
 
-
-## Build
-
-In order to compile the code, you have to run the following command:
-
-```
-sbt test assembly
-```
-
-To publish a release to github:
-```
-git tag vX.Y.Z
-git push origin vX.Y.Z
-export GITHUB_TOKEN=XXXXXX
-sbt assembly githubRelease
-```
-
-The token should be created as per the [instructions](https://github.com/ohnosequences/sbt-github-release/tree/master#credentials) of the sbt-github-release plugin.
-
-

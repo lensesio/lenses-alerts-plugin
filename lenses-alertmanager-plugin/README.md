@@ -35,21 +35,3 @@ lenses.alerting.plugins = [
 Once an alert is raised, in order to avoid having the Alert Manager clearing it, it has to be re-send.
 The `publish-interval` controls how often this happens. Once the alert has been resolved, the alert is posted to Alert Manager
 with the end timestamp stamp and from that point onwards the alert is not pushed to Alert Manager, unless it is raised again.
-
-## Build
-
-In order to compile the code, you have to run the following command:
-
-```
-sbt assembly
-```
-
-To publish a release to github:
-```
-git tag vX.Y.Z
-git push origin vX.Y.Z
-export GITHUB_TOKEN=XXXXXX
-sbt assembly githubRelease
-```
-
-The token should be created as per the [instructions](https://github.com/ohnosequences/sbt-github-release/tree/master#credentials) of the sbt-github-release plugin.
