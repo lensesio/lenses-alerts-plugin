@@ -7,9 +7,7 @@ import io.lenses.alerting.plugin
 import io.lenses.alerting.plugin.javaapi.util.{Failure => JFailure}
 import io.lenses.alerting.plugin.javaapi.util.{Success => JSuccess}
 
-import scala.collection.JavaConverters._
 import scala.util.Failure
-import scala.util.Success
 import scala.util.Try
 import AlertConversion._
 
