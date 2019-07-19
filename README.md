@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Landoop/lenses-alerts-plugin.svg?branch=master)](https://travis-ci.org/Landoop/lenses-alerts-plugin)
-[<img src="https://img.shields.io/maven-central/v/io.lenses/lenses-alerts-plugin.svg?label=latest%20release%20"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22lenses-alerts-plugin%22)
+[<img src="https://img.shields.io/maven-central/v/io.lenses/lenses-alerts-plugin-api_2.12.svg?label=latest%20release%20"/>](https://search.maven.org/search?q=lenses-alerts-plugin-api_2.12)
 
 
 # lenses-alerts-plugin
