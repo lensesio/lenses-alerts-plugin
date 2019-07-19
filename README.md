@@ -29,33 +29,37 @@ This project uses sbt. To compile and run the tests execute
 sbt test
 ```
 
-To publish a release:
+# Release
+
+Initial setup:
 
 - create `$HOME/.sbt/1.0/sonatype.sbt` with Sonatype account information:
-
 ```
 credentials += Credentials("Sonatype Nexus Repository Manager",
                            "oss.sonatype.org",
-                           "(Sonatype user name)",
-                           "(Sonatype password)")
+                           "YOUR_SONATYPE_USERNAME",
+                           "YOUR_SONATYPE_PASSWORD")
 ```
 
-- tag the release:
+- create `$HOME/.github`, with an OAuth token created as per these [instructions](https://github.com/ohnosequences/sbt-github-release/tree/master#credentials):
+```
+oauth = YOUR_OAUTH_TOKEN
+```
 
+Create and publish the release:
+
+- tag the release:
 ```
 git tag vX.Y.Z
 git push origin vX.Y.Z
 ```
 
-- publish to nexus
+- publish libraries to nexus
 ```
-sbt publishSigned
+sbt publishSigned sonatypeRelease
 ```
 
-- push standalone jars to github
+- publish standalone jars to github
 ```
-export GITHUB_TOKEN=XXXXXX
 sbt assembly githubRelease
 ```
-
-The token should be created as per the [instructions](https://github.com/ohnosequences/sbt-github-release/tree/master#credentials) of the sbt-github-release plugin.
