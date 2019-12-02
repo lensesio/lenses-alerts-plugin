@@ -1,3 +1,7 @@
+import sbt._
+import sbtassembly.AssemblyPlugin.autoImport._
+import sbtassembly.{MergeStrategy, PathList}
+
 // Repository settings
 ThisBuild / organization := "io.lenses"
 ThisBuild / organizationName := "Lenses.io"
@@ -20,10 +24,16 @@ ThisBuild / developers := List(
     "Stephen Kennedy",
     "stephen.kennedy@lenses.io",
     null
+  ),
+  Developer(
+    "spirosoik",
+    "Spiros Economakis",
+    "spiros@lenses.io",
+    null
   )
 )
 ThisBuild / licenses := List("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
-ThisBuild / homepage := Some(url("http://github.com/landoop/lenses-alerts-plugin"))
+ThisBuild / homepage := Some(url("http://github.com/lensesio/lenses-alerts-plugin"))
 
 // Build settings
 ThisBuild / scalaVersion     := "2.12.8"
@@ -52,6 +62,7 @@ ThisBuild / publishTo := sonatypePublishTo.value
 val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0"
 val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.25"
 val jslack = "com.github.seratch" % "jslack" % "1.0.26"
+val awsCloudWatchEvents = "software.amazon.awssdk" % "cloudwatchevents" % "2.10.25"
 val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.5.6"
 val circeParser = "io.circe" %% "circe-parser" % "0.11.1"
 val circeGeneric = "io.circe" %% "circe-generic" % "0.11.1"
@@ -63,13 +74,14 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5"
 // Root project
 lazy val root = (project in file("."))
   .disablePlugins(AssemblyPlugin)
-  .aggregate(alertsPluginApi, slackAlertsPlugin, alertManagerPlugin)
+  .aggregate(alertsPluginApi, slackAlertsPlugin, alertManagerPlugin, cloudWatchAlertsPlugin)
   .settings(
     name := "lenses-alerts-plugin",
     ghreleaseNotes := identity,
     ghreleaseAssets := List(
       (slackAlertsPlugin / assembly / assemblyOutputPath).value,
       (alertManagerPlugin / assembly / assemblyOutputPath).value,
+      (cloudWatchAlertsPlugin / assembly / assemblyOutputPath).value,
     ),
     skip in publish := true
   )
@@ -111,5 +123,46 @@ lazy val alertManagerPlugin = (project in file("lenses-alertmanager-plugin"))
     libraryDependencies += logbackClassic % Test,
     libraryDependencies += scalaTest % Test,
     libraryDependencies += wiremock % Test,
+    assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
+  )
+
+lazy val cloudWatchAlertsPlugin = (project in file("lenses-cloudwatch-plugin"))
+  .disablePlugins(SbtGithubReleasePlugin)
+  .dependsOn(alertsPluginApi)
+  .settings(
+    name := "lenses-cloudwatch-plugin",
+    description := "Lenses.io CloudWatch Alerts Plugin",
+    libraryDependencies += sl4fj % Provided,
+    libraryDependencies += circeParser % Provided,
+    libraryDependencies += circeGeneric % Provided,
+    libraryDependencies += circeGenericExtras % Provided,
+    libraryDependencies += awsCloudWatchEvents,
+    libraryDependencies += logbackClassic % Test,
+    libraryDependencies += scalaTest % Test,
+    assemblyMergeStrategy in assembly  :=  {
+      case PathList(ps@_*) if Set(
+        "codegen.config" ,
+        "service-2.json" ,
+        "waiters-2.json" ,
+        "customization.config" ,
+        "examples-1.json" ,
+        "paginators-1.json",
+        "module-info.class",
+      ).contains(ps.last) =>
+        MergeStrategy.discard
+      case x@PathList("META-INF", path@_*) =>
+        path map {
+          _.toLowerCase
+        } match {
+          case "io.netty.versions.properties" :: Nil =>
+            MergeStrategy.first
+          case _ =>
+            val oldStrategy = (assemblyMergeStrategy in assembly).value
+            oldStrategy(x)
+        }
+      case x =>
+        val oldStrategy = (assemblyMergeStrategy in assembly).value
+        oldStrategy(x)
+    },
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
   )

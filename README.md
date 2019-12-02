@@ -15,6 +15,8 @@ some officially supported implementations.
   - defines an implementation for Slack integration
 - [`lenses-alertmanager-plugin`](./lenses-alertmanager-plugin)
   - defines an implementation for Prometheus Alertmanager
+- [`lenses-cloudwatch-plugin`](./lenses-cloudwatch-plugin)
+  - defines an implementation for CloudWatch Events
   
 All modules are published to Maven central. In addition, standalone JARs of 
 each of plugin integration are available to download from Github releases, ready
