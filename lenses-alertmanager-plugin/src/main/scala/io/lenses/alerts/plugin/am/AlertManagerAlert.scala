@@ -28,9 +28,7 @@ object AlertManagerAlert {
   import io.circe._
   import io.circe.generic.semiauto._
 
-  implicit val AMAlertEncoder: ObjectEncoder[AlertManagerAlert] = deriveEncoder[AlertManagerAlert]
-
- // implicit val AMAlertsEncoder: ObjectEncoder[List[AlertManagerAlert]] = deriveEncoder[List[AlertManagerAlert]]
+  implicit val AMAlertEncoder: Encoder.AsObject[AlertManagerAlert] = deriveEncoder[AlertManagerAlert]
 
   implicit class AlertExtension(val alert: Alert) extends AnyVal {
     def toAMAlert: AlertManagerAlert = {

@@ -31,7 +31,7 @@ object CloudWatchAlert {
   import io.circe._
   import io.circe.generic.semiauto._
 
-  implicit val AMAlertEncoder: ObjectEncoder[CloudWatchAlert] = deriveEncoder[CloudWatchAlert]
+  implicit val AMAlertEncoder: Encoder.AsObject[CloudWatchAlert] = deriveEncoder[CloudWatchAlert]
 
   implicit class AlertExtension(val alert: Alert) extends AnyVal {
     def toCWAlert: CloudWatchAlert = {
