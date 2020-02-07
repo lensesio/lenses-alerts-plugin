@@ -77,6 +77,7 @@ lazy val root = (project in file("."))
   .aggregate(alertsPluginApi, slackAlertsPlugin, alertManagerPlugin, cloudWatchAlertsPlugin)
   .settings(
     name := "lenses-alerts-plugin",
+    ghreleaseRepoOrg := "lensesio",
     ghreleaseNotes := identity,
     ghreleaseAssets := List(
       (slackAlertsPlugin / assembly / assemblyOutputPath).value,
