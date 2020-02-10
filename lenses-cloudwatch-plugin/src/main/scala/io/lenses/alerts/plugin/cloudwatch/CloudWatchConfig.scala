@@ -7,4 +7,4 @@ package io.lenses.alerts.plugin.cloudwatch
  * @param accessSecretKey - The AWS access secret key of an IAM account
  * @param source          - The source name which will be added in the CloudWatch event
  */
-case class CloudWatchConfig(accessKey: String, accessSecretKey: String, source: String)
+case class CloudWatchConfig(accessKey: String, accessSecretKey: String, region: Option[String], source: String)
