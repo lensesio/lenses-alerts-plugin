@@ -9,6 +9,7 @@ import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.cloudwatch.CloudWatchAlert._
 import io.lenses.alerts.plugin.cloudwatch.TryUtils._
 import software.amazon.awssdk.auth.credentials.{AwsBasicCredentials, StaticCredentialsProvider}
+import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.cloudwatchevents.CloudWatchEventsClient
 import software.amazon.awssdk.services.cloudwatchevents.model.{PutEventsRequest, PutEventsRequestEntry}
 
@@ -20,10 +21,11 @@ class CloudWatchAlertService(override val name: String,
                              config: CloudWatchConfig) extends AlertingService with Metadata {
   private val DetailType = "lensesAlerts"
 
-  private val credsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create(config.accessKey, config.accessSecretKey))
-  private val cloudWatchClient: CloudWatchEventsClient = CloudWatchEventsClient.builder()
-    .credentialsProvider(credsProvider)
-    .build()
+  private val cloudWatchClient: CloudWatchEventsClient = {
+    val credsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create(config.accessKey, config.accessSecretKey))
+    val builder = CloudWatchEventsClient.builder().credentialsProvider(credsProvider)
+    config.region.fold(builder)(r => builder.region(Region.of(r))).build()
+  }
 
   override def publish(alert: Alert): JTry[Alert] = {
     Try {

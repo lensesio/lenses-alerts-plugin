@@ -5,12 +5,12 @@ import java.util
 import io.lenses.alerting.plugin.javaapi.{AlertingPlugin, AlertingService, ConfigEntry}
 import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.cloudwatch.TryUtils._
-import CloudWatchAlertsPlugin.{ACCESS_KEY, ACCESS_SECRET_KEY, SOURCE}
 
 import scala.collection.JavaConverters._
 import scala.util.Try
 
 class CloudWatchAlertsPlugin extends AlertingPlugin with Metadata {
+  import CloudWatchAlertsPlugin._
 
   override val name: String = "CloudWatch Events"
 
@@ -25,9 +25,10 @@ class CloudWatchAlertsPlugin extends AlertingPlugin with Metadata {
 
     val accessKey = getOrError(ACCESS_KEY)
     val accessSecretKey = getOrError(ACCESS_SECRET_KEY)
+    val region = map.get(REGION)
     val sourceName = getOrError(SOURCE)
 
-    val cwConfig = CloudWatchConfig(accessKey, accessSecretKey, sourceName)
+    val cwConfig = CloudWatchConfig(accessKey, accessSecretKey, region, sourceName)
     val as: AlertingService = new CloudWatchAlertService(name, description, cwConfig)
     as
   }.asJava
@@ -45,5 +46,6 @@ class CloudWatchAlertsPlugin extends AlertingPlugin with Metadata {
 object CloudWatchAlertsPlugin {
   val ACCESS_KEY = "access-key"
   val ACCESS_SECRET_KEY = "access-secret-key"
+  val REGION = "region"
   val SOURCE = "source"
 }
