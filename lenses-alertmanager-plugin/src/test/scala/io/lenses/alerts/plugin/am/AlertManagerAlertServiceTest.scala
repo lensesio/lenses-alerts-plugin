@@ -1,30 +1,25 @@
 package io.lenses.alerts.plugin.am
 
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
-
-import io.lenses.alerting.plugin
+import io.lenses.alerting.plugin.AlertLevel
 import io.lenses.alerting.plugin.javaapi.util.{Failure => JFailure}
 import io.lenses.alerting.plugin.javaapi.util.{Success => JSuccess}
 import io.lenses.alerting.plugin.scalaapi.Alert
-import io.lenses.alerting.plugin.AlertLevel
 import io.lenses.alerts.plugin.am.AlertManagerAlert._
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
 import scala.collection.mutable.ListBuffer
+import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
 class AlertManagerAlertServiceTest extends FunSuite with Matchers {
   test("pushes the alert to the publisher when it is received") {
     val config = Config(List("http://machine:12333"), "prod1", "http://lensesisgreat:42424", 10000, HttpConfig())
-    val countdown = new CountDownLatch(1)
     val buffer = ListBuffer.empty[AlertManagerAlert]
     val publisher = new Publisher {
       override def publish(alert: AlertManagerAlert): Try[Unit] = {
         buffer += alert
-        countdown.countDown()
         Success(())
       }
       override def close(): Unit = {}
@@ -43,14 +38,45 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       1,
       Map.empty).asJava
 
-    publish(alert, service)
+    service.publish(alert) match {
+      case _: JSuccess[_] =>
+      case _: JFailure[_] => fail("There should be no failure.")
+    }
 
-    countdown.await(500, TimeUnit.MILLISECONDS) shouldBe true
     service.close()
     buffer.size shouldBe 1
     buffer.head shouldBe alert.toAMAlert(config).copy(startsAt = buffer.head.startsAt)
     buffer.head.generatorURL shouldBe config.generatorUrl
     buffer.head.annotations("source") shouldBe config.sourceEnvironment
+  }
+
+  test("returns failure if publish fails") {
+    val config = Config(List("http://machine:12333"), "prod1", "http://lensesisgreat:42424", 10000, HttpConfig())
+    val theException = new Exception("Ooops!")
+    val publisher = new Publisher {
+      override def publish(alert: AlertManagerAlert): Try[Unit] = {
+        Failure(theException)
+      }
+      override def close(): Unit = {}
+    }
+
+    val service = new AlertManagerService("", "", config, publisher, (_, _, _) => NoOpRepublisher)
+
+    val alert = Alert(
+      AlertLevel.CRITICAL,
+      "infrastructure",
+      List("tag1"),
+      "prod1",
+      "This is important",
+      None,
+      System.currentTimeMillis(),
+      1,
+      Map.empty).asJava
+
+    service.publish(alert) match {
+      case _: JSuccess[_] => fail("Publish should fail")
+      case f: JFailure[_] => f.exception shouldBe theException
+    }
   }
 
   test("keeps the alerts raised until an INFO version is received") {
@@ -79,7 +105,10 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       1,
       Map.empty).asJava
 
-    publish(alert1, service)
+    service.publish(alert1) match {
+      case _: JSuccess[_] =>
+      case _: JFailure[_] => fail("There should be no failure.")
+    }
 
     val alert2 = Alert(
       AlertLevel.CRITICAL,
@@ -92,7 +121,10 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       2,
       Map.empty).asJava
 
-    publish(alert2, service)
+    service.publish(alert2) match {
+      case _: JSuccess[_] =>
+      case _: JFailure[_] => fail("There should be no failure.")
+    }
 
     buffer.size shouldBe 2
 
@@ -112,7 +144,10 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
       Map.empty)
 
     buffer.clear()
-    publish(alert2Info.asJava, service)
+    service.publish(alert2Info.asJava) match {
+      case _: JSuccess[_] =>
+      case _: JFailure[_] => fail("There should be no failure.")
+    }
 
     buffer.size shouldBe 1
     buffer.head shouldBe alert2Info.copy(level = AlertLevel.CRITICAL).asJava.toAMAlert(config).copy(startsAt = buffer.head.startsAt, endsAt = buffer.head.endsAt)
@@ -121,10 +156,4 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
     buffer.head.endsAt.isDefined shouldBe true
   }
 
-  private def publish(alert: plugin.Alert, service: AlertManagerService): Unit = {
-    service.publish(alert) match {
-      case _: JSuccess[_] =>
-      case _: JFailure[_] => fail("There should be no failure.")
-    }
   }
-}

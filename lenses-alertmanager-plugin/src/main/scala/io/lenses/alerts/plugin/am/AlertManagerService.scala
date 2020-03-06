@@ -10,7 +10,7 @@ import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.am.AlertManagerAlert._
 import io.lenses.alerts.plugin.am.TryUtils._
 
-import scala.util.Try
+import scala.util.Success
 
 class AlertManagerService(override val name: String,
                           override val description: String,
@@ -36,10 +36,11 @@ class AlertManagerService(override val name: String,
       Some(convertedAlert)
     }
 
-    Try {
-      amAlert.foreach(amPublisher.publish)
-      alert
-    }.asJava
+    amAlert
+      .map(amPublisher.publish)
+      .getOrElse(Success(()))
+      .map(_ => alert)
+      .asJava
   }
 
   override def close(): Unit = {
