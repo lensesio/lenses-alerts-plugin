@@ -31,7 +31,7 @@ class AlertManagerService(override val name: String,
         .map(_.copy(endsAt = Some(endDateTime)))
 
     } else {
-      val convertedAlert = alert.toAMAlert
+      val convertedAlert = alert.toAMAlert(config)
       raisedAlertsBuffer += alert.alertId -> convertedAlert
       Some(convertedAlert)
     }

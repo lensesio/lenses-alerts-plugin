@@ -15,6 +15,8 @@ import scala.util.Success
 import scala.util.Try
 
 class AsyncRepublisherTest extends FunSuite with Matchers {
+  val config = Config(List("http://machine:12333"), "prod1", "http://lensesisgreat:42424", 10000, HttpConfig())
+
   test("pushes all the alerts to the Publisher") {
     val alert1 = Alert(
       AlertLevel.CRITICAL,
@@ -25,7 +27,7 @@ class AsyncRepublisherTest extends FunSuite with Matchers {
       None,
       System.currentTimeMillis(),
       1,
-      Map.empty).toAMAlert
+      Map.empty).asJava.toAMAlert(config)
 
     val alert2 = Alert(
       AlertLevel.HIGH,
@@ -36,7 +38,7 @@ class AsyncRepublisherTest extends FunSuite with Matchers {
       None,
       System.currentTimeMillis(),
       2,
-      Map.empty).toAMAlert
+      Map.empty).asJava.toAMAlert(config)
 
     val alertsRaised = new AlertsRaised {
       override def getAlerts: Iterable[AlertManagerAlert] = List(alert1, alert2)
