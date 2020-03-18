@@ -15,6 +15,7 @@ import org.scalatest.Matchers
 import scala.util.Success
 
 class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
+  val config = Config(List("http://machine:12333"), "prod1", "http://lensesisgreat:42424", 10000, HttpConfig())
 
   test("pushes the alert to alert manager") {
     val Port = 42420
@@ -41,7 +42,7 @@ class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
         None,
         System.currentTimeMillis(),
         1,
-        Map.empty).toAMAlert
+        Map.empty).asJava.toAMAlert(config)
 
       val json = List(alert).asJson.noSpaces
 
@@ -82,7 +83,7 @@ class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
         None,
         System.currentTimeMillis(),
         1,
-        Map.empty).toAMAlert
+        Map.empty).asJava.toAMAlert(config)
 
       val json = List(alert).asJson.noSpaces
 
@@ -109,7 +110,7 @@ class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
       None,
       System.currentTimeMillis(),
       1,
-      Map.empty).toAMAlert
+      Map.empty).asJava.toAMAlert(config)
 
     val json = List(alert).asJson.noSpaces
 

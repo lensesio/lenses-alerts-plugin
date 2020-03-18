@@ -45,8 +45,9 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
 
     service.close()
     buffer.size shouldBe 1
-    buffer.head shouldBe alert.toAMAlert.copy(startsAt = buffer.head.startsAt)
-    buffer.head.labels
+    buffer.head shouldBe alert.toAMAlert(config).copy(startsAt = buffer.head.startsAt)
+    buffer.head.generatorURL shouldBe config.generatorUrl
+    buffer.head.annotations("source") shouldBe config.sourceEnvironment
   }
 
   test("returns failure if publish fails") {
@@ -127,8 +128,8 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
 
     buffer.size shouldBe 2
 
-    val copied1 = alert1.toAMAlert.copy(startsAt = buffer.head.startsAt)
-    val copied2 = alert2.toAMAlert.copy(startsAt = buffer(1).startsAt)
+    val copied1 = alert1.toAMAlert(config).copy(startsAt = buffer.head.startsAt)
+    val copied2 = alert2.toAMAlert(config).copy(startsAt = buffer(1).startsAt)
     buffer.sortBy(_.alertId) shouldBe ListBuffer(copied1, copied2)
 
     val alert2Info = Alert(
@@ -149,7 +150,9 @@ class AlertManagerAlertServiceTest extends FunSuite with Matchers {
     }
 
     buffer.size shouldBe 1
-    buffer.head shouldBe alert2Info.copy(level = AlertLevel.CRITICAL).asJava.toAMAlert.copy(startsAt = buffer.head.startsAt, endsAt = buffer.head.endsAt)
+    buffer.head shouldBe alert2Info.copy(level = AlertLevel.CRITICAL).asJava.toAMAlert(config).copy(startsAt = buffer.head.startsAt, endsAt = buffer.head.endsAt)
+    buffer.head.generatorURL shouldBe config.generatorUrl
+    buffer.head.annotations("source") shouldBe config.sourceEnvironment
     buffer.head.endsAt.isDefined shouldBe true
   }
 
