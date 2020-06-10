@@ -60,13 +60,13 @@ ThisBuild / publishTo := sonatypePublishTo.value
 
 // Dependencies
 val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0"
-val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.25"
+val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.30"
 val jslack = "com.github.seratch" % "jslack" % "1.0.26"
 val awsCloudWatchEvents = "software.amazon.awssdk" % "cloudwatchevents" % "2.9.26"
-val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.5.6"
-val circeParser = "io.circe" %% "circe-parser" % "0.12.3"
-val circeGeneric = "io.circe" %% "circe-generic" % "0.12.3"
-val circeGenericExtras = "io.circe" %% "circe-generic-extras" % "0.12.2"
+val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.5.9"
+val circeParser = "io.circe" %% "circe-parser" % "0.13.0"
+val circeGeneric = "io.circe" %% "circe-generic" % "0.13.0"
+val circeGenericExtras = "io.circe" %% "circe-generic-extras" % "0.13.0"
 val wiremock = "com.github.tomakehurst" % "wiremock" % "2.23.2"
 val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5"
