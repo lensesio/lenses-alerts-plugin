@@ -4,23 +4,24 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util
 
-import io.lenses.alerting.plugin.{Alert, AlertLevel}
 import io.lenses.alerting.plugin.javaapi.AlertingService
 import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
+import io.lenses.alerting.plugin.{Alert, AlertLevel}
 import io.lenses.alerts.plugin.am.AlertManagerAlert._
 import io.lenses.alerts.plugin.am.TryUtils._
 
+import scala.collection.concurrent.TrieMap
 import scala.util.Success
 
 class AlertManagerService(override val name: String,
                           override val description: String,
                           config: Config,
                           amPublisher: Publisher,
+                          raisedAlertsBuffer: TrieMap[Int, AlertManagerAlert],
                           republisherFn: (Publisher, Long, AlertsRaised) => Republisher = Republisher.async)
   extends AlertingService with AutoCloseable with AlertsRaised with Metadata {
 
-  private val raisedAlertsBuffer = scala.collection.concurrent.TrieMap.empty[Int, AlertManagerAlert]
-  private val republisher = republisherFn(amPublisher, config.publishInterval, this)
+  private val republisher: Republisher = republisherFn(amPublisher, config.publishInterval, this)
 
   override def publish(alert: Alert): JTry[Alert] = {
     //when INFO is sent this means the alert has been resolved

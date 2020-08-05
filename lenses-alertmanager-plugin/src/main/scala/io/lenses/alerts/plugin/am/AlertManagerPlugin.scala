@@ -7,7 +7,15 @@ import io.lenses.alerting.plugin.javaapi.{AlertingPlugin, AlertingService, Confi
 import io.lenses.alerts.plugin.am.TryUtils._
 
 import scala.collection.JavaConverters._
+import scala.collection.concurrent.TrieMap
 import scala.util.Try
+
+object AlertManagerPlugin {
+
+  val sharedRaisedAlertsBuffer: TrieMap[Int, AlertManagerAlert] =
+    scala.collection.concurrent.TrieMap.empty[Int, AlertManagerAlert]
+
+}
 
 class AlertManagerPlugin extends AlertingPlugin with Metadata {
 
@@ -23,6 +31,7 @@ class AlertManagerPlugin extends AlertingPlugin with Metadata {
       description,
       amConfig,
       publisher,
+      AlertManagerPlugin.sharedRaisedAlertsBuffer
     )
     as
   }.asJava
