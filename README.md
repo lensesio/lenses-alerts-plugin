@@ -17,6 +17,8 @@ some officially supported implementations.
   - defines an implementation for Prometheus Alertmanager
 - [`lenses-cloudwatch-plugin`](./lenses-cloudwatch-plugin)
   - defines an implementation for CloudWatch Events
+- [`lenses-mail-alerts-plugin`](./lenses-mail-alerts-plugin)
+  - defines an implementation for SMTP emails
   
 All modules are published to Maven central. In addition, standalone JARs of 
 each of plugin integration are available to download from Github releases, ready

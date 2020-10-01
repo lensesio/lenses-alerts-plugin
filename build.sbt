@@ -62,6 +62,7 @@ ThisBuild / publishTo := sonatypePublishTo.value
 val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0"
 val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.30"
 val jslack = "com.github.seratch" % "jslack" % "1.0.26"
+val mail = "javax.mail" % "mail" % "1.5.0-b01"
 val awsCloudWatchEvents = "software.amazon.awssdk" % "cloudwatchevents" % "2.9.26"
 val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.5.9"
 val circeParser = "io.circe" %% "circe-parser" % "0.13.0"
@@ -74,7 +75,7 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.0.5"
 // Root project
 lazy val root = (project in file("."))
   .disablePlugins(AssemblyPlugin)
-  .aggregate(alertsPluginApi, slackAlertsPlugin, alertManagerPlugin, cloudWatchAlertsPlugin)
+  .aggregate(alertsPluginApi, slackAlertsPlugin, alertManagerPlugin, mailAlertsPlugin, cloudWatchAlertsPlugin)
   .settings(
     name := "lenses-alerts-plugin",
     ghreleaseRepoOrg := "lensesio",
@@ -82,6 +83,7 @@ lazy val root = (project in file("."))
     ghreleaseAssets := List(
       (slackAlertsPlugin / assembly / assemblyOutputPath).value,
       (alertManagerPlugin / assembly / assemblyOutputPath).value,
+      (mailAlertsPlugin / assembly / assemblyOutputPath).value,
       (cloudWatchAlertsPlugin / assembly / assemblyOutputPath).value,
     ),
     skip in publish := true
@@ -124,6 +126,19 @@ lazy val alertManagerPlugin = (project in file("lenses-alertmanager-plugin"))
     libraryDependencies += logbackClassic % Test,
     libraryDependencies += scalaTest % Test,
     libraryDependencies += wiremock % Test,
+    assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
+  )
+
+lazy val mailAlertsPlugin = (project in file("lenses-mail-alerts-plugin"))
+  .disablePlugins(SbtGithubReleasePlugin)
+  .dependsOn(alertsPluginApi)
+  .settings(
+    name := "lenses-mail-alerts-plugin",
+    description := "Lenses.io Mail Alerts Plugin",
+    libraryDependencies += sl4fj % Provided,
+    libraryDependencies += mail,
+    libraryDependencies += logbackClassic % Test,
+    libraryDependencies += scalaTest % Test,
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
   )
 
