@@ -6,7 +6,7 @@ import io.lenses.alerting.plugin.javaapi.{AlertingPlugin, AlertingService, Confi
 import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.cloudwatch.TryUtils._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 class CloudWatchAlertsPlugin extends AlertingPlugin with Metadata {
@@ -34,7 +34,7 @@ class CloudWatchAlertsPlugin extends AlertingPlugin with Metadata {
   }.asJava
 
   override def configKeys(): util.List[ConfigEntry] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     List(
       new ConfigEntry(ACCESS_KEY, "Contains the AWS access key of an IAM account."),
       new ConfigEntry(ACCESS_SECRET_KEY, "Contains the AWS access secret key of an IAM account."),

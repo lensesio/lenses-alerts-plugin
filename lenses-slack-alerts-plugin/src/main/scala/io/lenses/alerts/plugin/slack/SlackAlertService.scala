@@ -12,7 +12,7 @@ import io.lenses.alerting.plugin.AlertLevel
 import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.slack.TryUtils._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success, Try}
 
 class SlackAlertService(override val name: String,
@@ -62,7 +62,7 @@ class SlackAlertService(override val name: String,
     }.asJava
   }
   override def displayedInformation(): util.Map[String, String] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     Map(
       "User Name" -> config.userName,
       "Channel" -> config.channel

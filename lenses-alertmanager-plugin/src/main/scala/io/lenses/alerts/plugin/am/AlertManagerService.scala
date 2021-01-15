@@ -50,15 +50,15 @@ class AlertManagerService(override val name: String,
 
   override def getAlerts: Iterable[AlertManagerAlert] = raisedAlertsBuffer.values
   override def displayedInformation(): util.Map[String, String] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     Map(
       Config.Endpoints -> config.endpoints.mkString(","),
       "Lenses URL" -> config.generatorUrl,
-      "Publish Interval" -> (config.publishInterval + " ms"),
+      "Publish Interval" -> s"${config.publishInterval} ms",
       Config.SSL -> config.httpConfig.ssl.toString,
-      "HTTP connection timeout" -> (config.httpConfig.connectTimeout + " ms"),
-      "HTTP request timeout" -> (config.httpConfig.requestTimeout + " ms"),
-      "HTTP socket timeout" -> (config.httpConfig.socketTimeout + " ms")
+      "HTTP connection timeout" -> s"${config.httpConfig.connectTimeout} ms",
+      "HTTP request timeout" -> s"${config.httpConfig.requestTimeout} ms",
+      "HTTP socket timeout" -> s"${config.httpConfig.socketTimeout} ms"
     ).asJava
   }
 }

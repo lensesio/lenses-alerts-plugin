@@ -2,7 +2,7 @@ package io.lenses.alerting.plugin.scalaapi
 
 import io.lenses.alerting.plugin.{Alert => JAlert}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object AlertConversion {
 

@@ -52,7 +52,7 @@ class CloudWatchAlertService(override val name: String,
   }
 
   override def displayedInformation(): util.Map[String, String] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     Map(
       "Source" -> config.source
     ).asJava

@@ -5,7 +5,7 @@ import io.lenses.alerting.plugin.javaapi
 import io.lenses.alerting.plugin.javaapi.util.Try
 import io.lenses.alerting.plugin.javaapi.{ConfigEntry=>JConfigEntry}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class TestBasePlugin(thunk: => Try[javaapi.AlertingService]) extends JAlertingPlugin {
   override def name(): String = "name"

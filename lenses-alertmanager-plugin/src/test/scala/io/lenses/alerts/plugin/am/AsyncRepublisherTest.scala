@@ -10,7 +10,7 @@ import io.lenses.alerts.plugin.am.AlertManagerAlert._
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Success
 import scala.util.Try
 

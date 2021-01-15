@@ -7,7 +7,7 @@ import io.lenses.alerting.plugin.{Alert => JAlert}
 import io.lenses.alerting.plugin.javaapi.{AlertingService => JAlertingService}
 import io.lenses.alerting.plugin.scalaapi.util.TryUtils._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.util.Try
 

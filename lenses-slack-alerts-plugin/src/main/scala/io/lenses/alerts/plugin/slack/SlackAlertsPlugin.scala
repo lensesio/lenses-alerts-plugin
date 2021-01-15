@@ -7,7 +7,7 @@ import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.slack.SlackAlertsPlugin._
 import io.lenses.alerts.plugin.slack.TryUtils._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 class SlackAlertsPlugin extends AlertingPlugin with Metadata {
@@ -31,7 +31,7 @@ class SlackAlertsPlugin extends AlertingPlugin with Metadata {
     as
   }.asJava
   override def configKeys(): util.List[ConfigEntry] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     List(
       new ConfigEntry(WEBHOOK ,"Contains the Slack connection endpoint"),
       new ConfigEntry(USER,"When alerts are sent to the channel, this settings contains the user name sending them."),
