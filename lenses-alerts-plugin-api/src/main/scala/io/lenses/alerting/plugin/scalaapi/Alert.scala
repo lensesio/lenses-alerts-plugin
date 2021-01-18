@@ -8,7 +8,7 @@ import java.util.Optional
 import io.lenses.alerting.plugin.{Alert => JAlert}
 import io.lenses.alerting.plugin.AlertLevel
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 case class Alert(level: AlertLevel,
                  category: String,

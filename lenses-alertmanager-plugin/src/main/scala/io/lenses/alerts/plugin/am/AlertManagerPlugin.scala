@@ -6,7 +6,7 @@ import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerting.plugin.javaapi.{AlertingPlugin, AlertingService, ConfigEntry}
 import io.lenses.alerts.plugin.am.TryUtils._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 class AlertManagerPlugin extends AlertingPlugin with Metadata {
