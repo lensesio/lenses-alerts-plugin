@@ -28,7 +28,7 @@ This project uses sbt. To compile and run the tests execute
 
 
 ```bash
-sbt test
+sbt +test
 ```
 
 # Release
@@ -58,10 +58,10 @@ git push origin vX.Y.Z
 
 - publish libraries to nexus
 ```
-sbt publishSigned sonatypeRelease
+sbt +publishSigned sonatypeRelease
 ```
 
 - publish standalone jars to github
 ```
-sbt assembly githubRelease
+sbt +assembly githubRelease
 ```
