@@ -5,15 +5,15 @@ import io.lenses.alerting.plugin.javaapi.util.{Failure => JFailure}
 import io.lenses.alerting.plugin.javaapi.util.{Success => JSuccess}
 import io.lenses.alerting.plugin.scalaapi.Alert
 import io.lenses.alerts.plugin.am.AlertManagerAlert._
-import org.scalatest.FunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 import scala.collection.mutable.ListBuffer
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
-class AlertManagerAlertServiceTest extends FunSuite with Matchers {
+class AlertManagerAlertServiceTest extends AnyFunSuite with Matchers {
   test("pushes the alert to the publisher when it is received") {
     val config = Config(List("http://machine:12333"), "prod1", "http://lensesisgreat:42424", 10000, HttpConfig())
     val buffer = ListBuffer.empty[AlertManagerAlert]

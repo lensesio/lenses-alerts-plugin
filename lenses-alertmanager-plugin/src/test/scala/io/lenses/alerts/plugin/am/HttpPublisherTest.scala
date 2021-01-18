@@ -9,12 +9,12 @@ import io.lenses.alerting.plugin.AlertLevel
 import io.lenses.alerting.plugin.scalaapi.Alert
 import io.lenses.alerts.plugin.am.AlertManagerAlert._
 import org.scalatest.BeforeAndAfterAll
-import org.scalatest.FunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 import scala.util.Success
 
-class HttpPublisherTest extends FunSuite with Matchers with BeforeAndAfterAll {
+class HttpPublisherTest extends AnyFunSuite with Matchers with BeforeAndAfterAll {
   val config = Config(List("http://machine:12333"), "prod1", "http://lensesisgreat:42424", 10000, HttpConfig())
 
   test("pushes the alert to alert manager") {

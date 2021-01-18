@@ -4,11 +4,12 @@
 package io.lenses.alerting.plugin.scalaapi.util
 
 import io.lenses.alerting.plugin.javaapi.util.{Failure => JFailure, Success => JSuccess}
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
 import scala.util.{Failure, Success}
 
-class TryUtilsSpec extends WordSpec with Matchers {
+class TryUtilsSpec extends AnyWordSpec with Matchers {
   import TryUtils._
 
   "asScala" should {

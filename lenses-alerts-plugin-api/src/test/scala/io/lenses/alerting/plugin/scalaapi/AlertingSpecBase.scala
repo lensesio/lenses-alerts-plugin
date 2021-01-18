@@ -11,10 +11,10 @@ import io.lenses.alerting.plugin.javaapi.{AlertingService => JAlertingService}
 import io.lenses.alerting.plugin.javaapi.util.{Success => JSuccess}
 import io.lenses.alerting.plugin.javaapi.util.Try
 import io.lenses.alerting.plugin.AlertLevel
-import org.scalatest.Matchers
-import org.scalatest.WordSpec
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-trait AlertingSpecBase extends WordSpec with Matchers {
+trait AlertingSpecBase extends AnyWordSpec with Matchers {
 
   trait TestContext {
     private def randomStr = UUID.randomUUID().toString

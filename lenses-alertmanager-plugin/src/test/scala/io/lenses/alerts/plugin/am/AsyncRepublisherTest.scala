@@ -7,14 +7,14 @@ import java.util.concurrent.TimeUnit
 import io.lenses.alerting.plugin.AlertLevel
 import io.lenses.alerting.plugin.scalaapi.Alert
 import io.lenses.alerts.plugin.am.AlertManagerAlert._
-import org.scalatest.FunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 import scala.jdk.CollectionConverters._
 import scala.util.Success
 import scala.util.Try
 
-class AsyncRepublisherTest extends FunSuite with Matchers {
+class AsyncRepublisherTest extends AnyFunSuite with Matchers {
   val config = Config(List("http://machine:12333"), "prod1", "http://lensesisgreat:42424", 10000, HttpConfig())
 
   test("pushes all the alerts to the Publisher") {

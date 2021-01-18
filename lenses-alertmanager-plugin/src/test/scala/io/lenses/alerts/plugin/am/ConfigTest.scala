@@ -1,10 +1,10 @@
 package io.lenses.alerts.plugin.am
 
 import io.lenses.alerts.plugin.am.Config._
-import org.scalatest.FunSuite
-import org.scalatest.Matchers
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class ConfigTest extends FunSuite with Matchers {
+class ConfigTest extends AnyFunSuite with Matchers {
   test("constructs the HttpConfig with the default http configs") {
     val expected = HttpConfig(HttpConnectTimeoutDefault,
       HttpRequestTimeoutDefault,

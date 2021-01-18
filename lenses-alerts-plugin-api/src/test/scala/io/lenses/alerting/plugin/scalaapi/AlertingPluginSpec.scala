@@ -18,7 +18,7 @@ class AlertingPluginSpec extends AlertingSpecBase {
 
       val service = AlertingPlugin(new TestBasePlugin(new JSuccess(forwardingService))).init(Map.empty)
 
-      service shouldBe 'success
+      service shouldBe Symbol("success")
       val result: Try[plugin.Alert] = service.flatMap(_.publish(dummyAlert.asJava))
       result.isSuccess shouldBe true
       val alert: plugin.Alert = result.get
