@@ -36,11 +36,7 @@ ThisBuild / licenses := List("Apache 2" -> new URL("http://www.apache.org/licens
 ThisBuild / homepage := Some(url("http://github.com/lensesio/lenses-alerts-plugin"))
 
 // Build settings
-lazy val scala213 = "2.13.4"
-lazy val scala212 = "2.12.12"
-lazy val supportedScalaVersions = List(scala213, scala212)
-
-ThisBuild / scalaVersion := scala213
+ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / javacOptions ++= Seq(
   "-source", "1.8",
   "-target", "1.8"
@@ -66,13 +62,12 @@ val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.30"
 val jslack = "com.github.seratch" % "jslack" % "1.0.26"
 val awsCloudWatchEvents = "software.amazon.awssdk" % "cloudwatchevents" % "2.16.48"
 val httpclient = "org.apache.httpcomponents" % "httpclient" % "4.5.13"
-val circeParser = "io.circe" %% "circe-parser" % "0.13.0"
-val circeGeneric = "io.circe" %% "circe-generic" % "0.13.0"
-val circeGenericExtras = "io.circe" %% "circe-generic-extras" % "0.13.0"
+val circeParser = "io.circe" %% "circe-parser" % "0.14.1"
+val circeGeneric = "io.circe" %% "circe-generic" % "0.14.1"
+val circeGenericExtras = "io.circe" %% "circe-generic-extras" % "0.14.1"
 val wiremock = "com.github.tomakehurst" % "wiremock" % "2.23.2"
 val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.2.3"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.2.2"
-val scalaCollectionCompat = "org.scala-lang.modules" %% "scala-collection-compat" % "2.3.2"
 
 // Root project
 lazy val root = (project in file("."))
@@ -87,7 +82,6 @@ lazy val root = (project in file("."))
       (alertManagerPlugin / assembly / assemblyOutputPath).value,
       (cloudWatchAlertsPlugin / assembly / assemblyOutputPath).value,
     ),
-    crossScalaVersions := Nil,
     publish / skip := true
   )
 
@@ -98,9 +92,7 @@ lazy val alertsPluginApi = (project in file("lenses-alerts-plugin-api"))
     name := "lenses-alerts-plugin-api",
     description := "Lenses.io Alerts Plugin API",
     libraryDependencies += scalaJava8Compat,
-    libraryDependencies += scalaCollectionCompat,
     libraryDependencies += scalaTest % Test,
-    crossScalaVersions := supportedScalaVersions,
   )
 
 lazy val slackAlertsPlugin = (project in file("lenses-slack-alerts-plugin"))
@@ -114,7 +106,6 @@ lazy val slackAlertsPlugin = (project in file("lenses-slack-alerts-plugin"))
     libraryDependencies += logbackClassic % Test,
     libraryDependencies += scalaTest % Test,
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
-    crossScalaVersions := supportedScalaVersions,
   )
 
 lazy val alertManagerPlugin = (project in file("lenses-alertmanager-plugin"))
@@ -132,7 +123,6 @@ lazy val alertManagerPlugin = (project in file("lenses-alertmanager-plugin"))
     libraryDependencies += scalaTest % Test,
     libraryDependencies += wiremock % Test,
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
-    crossScalaVersions := supportedScalaVersions,
   )
 
 lazy val cloudWatchAlertsPlugin = (project in file("lenses-cloudwatch-plugin"))
@@ -174,5 +164,4 @@ lazy val cloudWatchAlertsPlugin = (project in file("lenses-cloudwatch-plugin"))
         oldStrategy(x)
     },
     assembly / assemblyJarName := s"${name.value}-standalone-${version.value}.jar",
-    crossScalaVersions := supportedScalaVersions,
   )
