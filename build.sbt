@@ -57,7 +57,7 @@ ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / publishTo := sonatypePublishTo.value
 
 // Dependencies
-val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "0.9.0"
+val scalaJava8Compat = "org.scala-lang.modules" %% "scala-java8-compat" % "1.0.0"
 val sl4fj = "org.slf4j" % "slf4j-api" % "1.7.30"
 val jslack = "com.github.seratch" % "jslack" % "1.0.26"
 val awsCloudWatchEvents = "software.amazon.awssdk" % "cloudwatchevents" % "2.16.48"
