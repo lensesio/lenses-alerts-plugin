@@ -17,11 +17,13 @@ class CloudWatchAlertsPluginSpec extends AnyWordSpec with Matchers {
   "init" should {
     "success when authentication mode set to IAM and no secret and secret key are defined" in new TestContext {
 
-      val result = cloudWatchPlugin.init(scala.collection.immutable.Map(
-        "authentication-mode" -> "IAM",
-        "region"              -> "eu-west-2",
-        "source"              -> "customSource",
-      ).asJava)
+      val result = cloudWatchPlugin.init(
+        scala.collection.immutable.Map(
+          CloudWatchAlertsPlugin.AUTH_MODE_KEY -> "IAM",
+          CloudWatchAlertsPlugin.REGION        -> "eu-west-2",
+          CloudWatchAlertsPlugin.SOURCE        -> "customSource",
+        ).asJava,
+      )
 
       result shouldBe a[Success[_]]
     }
@@ -30,11 +32,11 @@ class CloudWatchAlertsPluginSpec extends AnyWordSpec with Matchers {
 
       val result = cloudWatchPlugin.init(
         scala.collection.immutable.Map(
-          "authentication-mode" -> "IAM",
-          "secret-key"          -> UUID.randomUUID().toString,
-          "secret-access-key"   -> UUID.randomUUID().toString,
-          "region"              -> "eu-west-2",
-          "source"              -> "customSource",
+          CloudWatchAlertsPlugin.AUTH_MODE_KEY     -> "BASIC",
+          CloudWatchAlertsPlugin.ACCESS_KEY        -> UUID.randomUUID().toString,
+          CloudWatchAlertsPlugin.ACCESS_SECRET_KEY -> UUID.randomUUID().toString,
+          CloudWatchAlertsPlugin.REGION            -> "eu-west-2",
+          CloudWatchAlertsPlugin.SOURCE            -> "customSource",
         ).asJava,
       )
 
@@ -45,9 +47,9 @@ class CloudWatchAlertsPluginSpec extends AnyWordSpec with Matchers {
 
       val result = cloudWatchPlugin.init(
         scala.collection.immutable.Map(
-          "authentication-mode" -> "BASIC",
-          "region"              -> "eu-west-2",
-          "source"              -> "customSource",
+          CloudWatchAlertsPlugin.AUTH_MODE_KEY -> "BASIC",
+          CloudWatchAlertsPlugin.REGION        -> "eu-west-2",
+          CloudWatchAlertsPlugin.SOURCE        -> "customSource",
         ).asJava,
       )
 
@@ -58,11 +60,11 @@ class CloudWatchAlertsPluginSpec extends AnyWordSpec with Matchers {
 
       val result = cloudWatchPlugin.init(
         scala.collection.immutable.Map(
-          "authentication-mode" -> "BASIC",
-          "secret-key"          -> UUID.randomUUID().toString,
-          "secret-access-key"   -> UUID.randomUUID().toString,
-          "region"              -> "eu-west-2",
-          "source"              -> "customSource",
+          CloudWatchAlertsPlugin.AUTH_MODE_KEY     -> "IAM",
+          CloudWatchAlertsPlugin.ACCESS_KEY        -> UUID.randomUUID().toString,
+          CloudWatchAlertsPlugin.ACCESS_SECRET_KEY -> UUID.randomUUID().toString,
+          CloudWatchAlertsPlugin.REGION            -> "eu-west-2",
+          CloudWatchAlertsPlugin.SOURCE            -> "customSource",
         ).asJava,
       )
 

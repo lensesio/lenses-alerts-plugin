@@ -24,13 +24,13 @@ class CloudWatchAlertsPlugin extends AlertingPlugin with Metadata {
     def getOrError(key: String): String =
       map.getOrElse(key, throw new IllegalArgumentException(s"Invalid configuration for CloudWatch plugin'[$key]'"))
 
-    val authMode = getOrError(AUTH_MODE_KEY)
+    val authMode = getOrError(AUTH_MODE_KEY).toUpperCase
     val (accessKey, accessSecretKey) = authMode match {
       case "IAM" =>
         if (map.contains(ACCESS_KEY) || map.contains(ACCESS_SECRET_KEY))
           throw new IllegalArgumentException(s"Invalid configuration for CloudWatch plugin'[$AUTH_MODE_KEY]'")
         None -> None
-      case "KEY" => Some(getOrError(ACCESS_KEY)) -> Some(getOrError(ACCESS_SECRET_KEY))
+      case "BASIC" => Some(getOrError(ACCESS_KEY)) -> Some(getOrError(ACCESS_SECRET_KEY))
     }
 
     val region     = map.get(REGION)
