@@ -5,12 +5,13 @@ import cats.syntax.apply._
 import io.circe.syntax._
 import io.lenses.alerting.plugin.Alert
 import io.lenses.alerting.plugin.javaapi.AlertingService
-import io.lenses.alerting.plugin.javaapi.util.{ Try => JTry }
+import io.lenses.alerting.plugin.javaapi.util.{Try => JTry}
 import io.lenses.alerts.plugin.cloudwatch.CloudWatchAlert._
 import io.lenses.alerts.plugin.cloudwatch.TryUtils._
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import software.amazon.awssdk.http.apache.ApacheHttpClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.cloudwatchevents.CloudWatchEventsClient
 import software.amazon.awssdk.services.cloudwatchevents.model.PutEventsRequest
@@ -33,9 +34,13 @@ class CloudWatchAlertService(override val name: String, override val description
         case (aKey, aSecretKey) => StaticCredentialsProvider.create(AwsBasicCredentials.create(aKey, aSecretKey))
       }
 
-    val credentialsProvider = credsProvider.getOrElse(DefaultCredentialsProvider.create())
+    val credentialsProvider =
+      credsProvider.getOrElse(DefaultCredentialsProvider.builder().reuseLastProviderEnabled(true).build())
 
-    val builder = CloudWatchEventsClient.builder().credentialsProvider(credentialsProvider)
+    val builder = CloudWatchEventsClient.builder().credentialsProvider(credentialsProvider).httpClient(
+      ApacheHttpClient.builder().build(),
+    )
+
     config.region.fold(builder)(r => builder.region(Region.of(r))).build()
   }
 
