@@ -62,6 +62,6 @@ object CloudWatchAlertsPlugin {
   val ACCESS_SECRET_KEY                = "access-secret-key"
   val REGION                           = "region"
   val SOURCE                           = "source"
-  val CREDENTIALS_CHAIN_AUTH_MODE_NAME = "Credentials Chain"
-  val ACCESS_KEY_AUTH_MODE_NAME        = "Access Key"
+  val CREDENTIALS_CHAIN_AUTH_MODE_NAME = "CREDENTIALS CHAIN"
+  val ACCESS_KEY_AUTH_MODE_NAME        = "ACCESS KEY"
 }

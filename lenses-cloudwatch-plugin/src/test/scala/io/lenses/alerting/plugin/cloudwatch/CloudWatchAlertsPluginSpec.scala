@@ -3,8 +3,8 @@
  */
 package io.lenses.alerting.plugin.cloudwatch
 
-import io.lenses.alerting.plugin.javaapi.util.Success
 import io.lenses.alerting.plugin.javaapi.util.Failure
+import io.lenses.alerting.plugin.javaapi.util.Success
 import io.lenses.alerts.plugin.cloudwatch.CloudWatchAlertsPlugin
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
